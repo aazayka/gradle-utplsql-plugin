@@ -1,0 +1,24 @@
+apply plugin: 'idea'
+apply plugin: 'groovy'
+apply plugin: 'maven'
+apply from: "$rootDir/gradle/cobertura.gradle"
+apply from: "$rootDir/gradle/sonar.gradle"
+
+group = 'com.iadams'
+version = '0.1'
+
+description = "Gradle plugin for utplsql test framework"
+
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+
+repositories {
+    jcenter()
+}
+dependencies {
+    compile localGroovy()
+    compile gradleApi()
+
+    testCompile 'xmlunit:xmlunit:1.3'
+    testCompile 'com.netflix.nebula:nebula-test:1.12.+'
+}
