@@ -1,15 +1,18 @@
 package com.iadams.gradle.plugins.utplsql
 
+import com.iadams.gradle.plugins.utplsql.tasks.DeployTestsTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.BasePlugin
 import com.iadams.gradle.plugins.utplsql.tasks.RunTestsTask
+import com.iadams.gradle.plugins.utplsql.tasks.ExecuteTestRule
 
 /**
  * Created by Iain Adams on 02/09/2014.
  */
 class UtplsqlPlugin implements Plugin<Project> {
     static final UTPLSQL_RUN_TESTS_TASK = 'runUtplsqlTests'
+    static final UTPLSQL_DEPLOY_TESTS_TASK = 'deployUtplsqlTests'
     static final UTPLSQL_EXTENSION = 'utplsql'
 
     /**
@@ -46,8 +49,19 @@ class UtplsqlPlugin implements Plugin<Project> {
             conventionMapping.outputFailuresToConsole = { extension.outputFailuresToConsole }
         }
 
+        project.task( UTPLSQL_DEPLOY_TESTS_TASK , type: DeployTestsTask) {
+            description = 'Deploys all the UTPLSQL tests with JDBC.'
+            group = 'utplsql'
+            conventionMapping.driver = { extension.driver }
+            conventionMapping.url = { extension.url }
+            conventionMapping.username = { extension.username }
+            conventionMapping.password = { extension.password }
+            inputDirectory = new File("${project.projectDir}/src/test/plsql")
+        }
+
         project.task( UTPLSQL_RUN_TESTS_TASK , type: RunTestsTask) {
             description = 'Executes all utPLSQL tests.'
+            group = 'utplsql'
         }
     }
 }

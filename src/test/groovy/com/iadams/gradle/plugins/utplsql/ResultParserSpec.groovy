@@ -70,10 +70,19 @@ class ResultParserSpec extends Specification {
     def "get results with non-null string"() {
         when:
             def description = "something : else".split(':')
-            def output = ResultParser.getResults("Result!",description, 0)
+            def output = ResultParser.getResults("Result!", description, 0)
 
         then:
             output == "Result!"
+    }
+
+    def "get results with null string"() {
+        when:
+        def description = "something : else".split(':')
+        def output = ResultParser.getResults(null, description, 0)
+
+        then:
+        output == "something  else"
     }
 
     def "check exceptions is thrown"() {
