@@ -63,5 +63,7 @@ class UtplsqlPlugin implements Plugin<Project> {
             description = 'Executes all utPLSQL tests.'
             group = 'utplsql'
         }
+
+        project.getTasks().addRule(new ExecuteTestRule(project.getTasks()))
     }
 }
