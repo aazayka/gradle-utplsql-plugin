@@ -1,6 +1,7 @@
 package com.iadams.gradle.plugins.utplsql
 
 import com.iadams.gradle.plugins.utplsql.tasks.RunTestsTask
+import com.iadams.gradle.plugins.utplsql.tasks.ExecuteTestRule
 import nebula.test.PluginProjectSpec
 import org.gradle.api.Task
 import org.gradle.api.artifacts.Configuration
@@ -33,5 +34,21 @@ class UtplsqlPluginSpec extends PluginProjectSpec  {
             task != null
             task instanceof RunTestsTask
             task.description == 'Executes all utPLSQL tests.'
+    }
+
+    def "apply creates rule of type ExecuteTestRule"() {
+        setup:
+            Task task = project.tasks.findByName('executeTestBetwnstr')
+
+        expect:
+            task != null
+    }
+
+    def "apply creates rule of type DeployTestRule"() {
+        setup:
+            Task task = project.tasks.findByName('deployTestBetwnstr')
+
+        expect:
+            task != null
     }
 }

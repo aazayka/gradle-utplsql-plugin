@@ -1,11 +1,12 @@
 package com.iadams.gradle.plugins.utplsql
 
-import com.iadams.gradle.plugins.utplsql.tasks.DeployTestsTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.BasePlugin
 import com.iadams.gradle.plugins.utplsql.tasks.RunTestsTask
+import com.iadams.gradle.plugins.utplsql.tasks.DeployTestsTask
 import com.iadams.gradle.plugins.utplsql.tasks.ExecuteTestRule
+import com.iadams.gradle.plugins.utplsql.tasks.DeployTestRule
 
 /**
  * Created by Iain Adams on 02/09/2014.
@@ -64,6 +65,7 @@ class UtplsqlPlugin implements Plugin<Project> {
             group = 'utplsql'
         }
 
-        project.getTasks().addRule(new ExecuteTestRule(project.getTasks()))
+        project.getTasks().addRule(new ExecuteTestRule(project))
+        project.getTasks().addRule(new DeployTestRule(project))
     }
 }

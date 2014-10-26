@@ -1,22 +1,22 @@
 package com.iadams.gradle.plugins.utplsql.tasks
 
-import org.gradle.api.Rule
 import org.gradle.api.Project
+import org.gradle.api.Rule
 
 /**
  * Created by Iain Adams on 18/10/2014.
  */
-class ExecuteTestRule implements Rule {
+class DeployTestRule implements Rule {
 
-    static final String PREFIX = "executeTest"
+    static final String PREFIX = "deployTest"
     Project project
 
-    ExecuteTestRule(Project project) {
+    DeployTestRule(Project project) {
         this.project = project
     }
 
     String getDescription() {
-        String.format("Pattern: %s<TestName>: Executes a specific UTPLSQL test.", PREFIX)
+        String.format("Pattern: %s<TestName>: Deploys a specific UTPLSQL test.", PREFIX)
     }
 
     @Override
