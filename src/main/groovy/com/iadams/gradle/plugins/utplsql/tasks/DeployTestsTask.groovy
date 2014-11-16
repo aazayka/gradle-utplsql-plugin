@@ -73,6 +73,8 @@ class DeployTestsTask extends DefaultTask {
         logger.info "Username: ${getUsername()}"
         logger.info "Driver: ${getDriver()}"
 
+        //TODO Update the task to use a file find/include filter and set inputs/outputs
+
         try {
             def sql = Sql.newInstance(getUrl() ,getUsername() ,getPassword() ,getDriver())
 

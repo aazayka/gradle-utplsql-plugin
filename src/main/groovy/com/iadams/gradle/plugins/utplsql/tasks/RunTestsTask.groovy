@@ -92,6 +92,7 @@ class RunTestsTask extends DefaultTask {
 
     @TaskAction
     void runUtplsqlTests() {
+        //TODO This task should really generate a list of packages from the test-source folder
 
         println "URL: ${getUrl()}"
         println "Username: ${getUsername()}"

@@ -27,8 +27,8 @@ class ExecuteTestRule implements Rule {
     void apply(String taskName) {
         if (taskName.startsWith(PREFIX)) {
             project.getTasks().create(taskName)
-            println "Pinging: " + (taskName - PREFIX)
-            println project.utplsql.username
+
+            //TODO complete the rule to execute a specific test.
         }
     }
 }

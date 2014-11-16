@@ -28,6 +28,7 @@ class DeployTestRule implements Rule {
         if (taskName.startsWith(PREFIX)) {
             project.getTasks().create(taskName, type: DeployTestsTask)
 
+            //TODO complete the rule to deploy a specific test (from the test source directory)
             println project.utplsql.username
             println project.utplsql.username
             println project.utplsql.username

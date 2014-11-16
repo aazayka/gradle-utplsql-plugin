@@ -27,6 +27,13 @@ class UtplsqlPlugin implements Plugin<Project> {
 
         project.extensions.create( UTPLSQL_EXTENSION, UtplsqlPluginExtension )
 
+        //project.configurations{ utplsqlToHtml }
+
+        /*ClassLoader antClassLoader = org.apache.tools.ant.Project.class.classLoader
+        project.configurations.utplsqlToHtml.each { File f ->
+            antClassLoader.addURL(f.toURI().toURL())
+        }*/
+
         addTasks(project)
     }
 
@@ -64,6 +71,20 @@ class UtplsqlPlugin implements Plugin<Project> {
             description = 'Executes all utPLSQL tests.'
             group = 'utplsql'
         }
+
+        //TODO Ensure we can generate HTML reports
+        /*project.task( "UtplsqlReport") {
+            group = 'utplsql'
+
+            ant.taskdef(name: 'junitreport',
+                        classname: 'org.apache.tools.ant.taskdefs.optional.junit.XMLResultAggregator',
+                        classpath: project.configurations.runtime.asPath
+            )
+            ant.junitreport(todir: "${project.buildDir}/reports") {
+                fileset(dir: "${project.buildDir}/utplsql", includes: 'TEST-*.xml')
+                report(todir: "${project.buildDir}/reports/utplsql", format: "frames")
+            }
+        }*/
 
         project.getTasks().addRule(new ExecuteTestRule(project))
         project.getTasks().addRule(new DeployTestRule(project))
