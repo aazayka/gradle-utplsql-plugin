@@ -10,7 +10,7 @@ Latest Version
  
 Build Status
 ------------
--N/A
+[![Build Status](https://travis-ci.org/iwarapter/gradle-utplsql-plugin.svg)](https://travis-ci.org/iwarapter/gradle-utplsql-plugin)
 
 Usage
 -----------
