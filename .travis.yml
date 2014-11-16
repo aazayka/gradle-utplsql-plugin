@@ -1,0 +1,13 @@
+env:
+   - TERM=dumb
+
+language: groovy
+jdk:
+  - oraclejdk7
+  - openjdk7
+  - openjdk6
+
+before_install:
+ - chmod +x gradlew
+
+script: ./gradlew clean check -DintegTest.single=*IntegSpec

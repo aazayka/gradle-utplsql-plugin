@@ -10,4 +10,17 @@ import spock.lang.Unroll
 class UtplsqlPluginIntegDbSpec extends IntegrationSpec {
 
     //TODO Actually write some tests using a DB!
+    def "should allow to run pldoc with different Gradle versions"() {
+        setup:
+            useToolingApi = false
+            buildFile << '''
+                        apply plugin: 'com.iadams.utplsql'
+                        '''.stripIndent()
+
+        when:
+            ExecutionResult result = runTasksSuccessfully('tasks')
+
+        then:
+            result.standardOutput.contains('runUtplsqlTests - Executes all utPLSQL tests.')
+    }
 }
