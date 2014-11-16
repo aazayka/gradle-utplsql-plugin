@@ -1,6 +1,5 @@
 package com.iadams.gradle.plugins.utplsql.tasks
 
-import com.iadams.gradle.plugins.utplsql.UtplsqlRunner
 import groovy.sql.Sql
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException

@@ -51,7 +51,7 @@ class UtplsqlPlugin implements Plugin<Project> {
         }
 
         project.task( UTPLSQL_DEPLOY_TESTS_TASK , type: DeployTestsTask) {
-            description = 'Deploys all the UTPLSQL tests with JDBC.'
+            description = 'Deploys all the UTPLSQL tests in the test folder with JDBC driver.'
             group = 'utplsql'
             conventionMapping.driver = { extension.driver }
             conventionMapping.url = { extension.url }

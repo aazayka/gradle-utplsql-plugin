@@ -26,8 +26,11 @@ class DeployTestRule implements Rule {
 
     void apply(String taskName) {
         if (taskName.startsWith(PREFIX)) {
-            project.getTasks().create(taskName)
-            println "Pinging: " + (taskName - PREFIX)
+            project.getTasks().create(taskName, type: DeployTestsTask)
+
+            println project.utplsql.username
+            println project.utplsql.username
+            println project.utplsql.username
             println project.utplsql.username
         }
     }

@@ -1,5 +1,6 @@
 package com.iadams.gradle.plugins.utplsql.tasks
 
+import com.iadams.gradle.plugins.utplsql.core.ReportGenerator
 import groovy.sql.Sql
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
@@ -7,7 +8,9 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.TaskAction
 
-import com.iadams.gradle.plugins.utplsql.UtplsqlRunner
+import com.iadams.gradle.plugins.utplsql.core.UtplsqlRunner
+
+import java.sql.SQLException
 
 /**
  * Created by Iain Adams on 13/09/2014.
@@ -102,16 +105,20 @@ class RunTestsTask extends DefaultTask {
         try {
             def sql = Sql.newInstance(getUrl() ,getUsername() ,getPassword() ,getDriver())
 
-            UtplsqlRunner runner = new UtplsqlRunner(new File("$outputDirectory/utplsql"))
+            UtplsqlRunner runner = new UtplsqlRunner(new File("$outputDirectory/utplsql"), logger)
+            ReportGenerator repGen = new ReportGenerator()
 
             if(getPackages()) {
                 getPackages().each{
-                    runner.runPackage(sql, it, getTestMethod(), getSetupMethod())
+                    new File("${runner.outputDir}/TEST-${it}.xml").write(runner.runPackage(sql, it, getTestMethod(), getSetupMethod().toBoolean(), repGen))
                 }
             }
         }
         catch (ClassNotFoundException e) {
-            throw new GradleException("JDBC Driver class not found", e);
+            throw new GradleException("JDBC Driver class not found", e)
+        }
+        catch (SQLException e) {
+            throw new GradleException("Error communicating with the database", e)
         }
     }
 }

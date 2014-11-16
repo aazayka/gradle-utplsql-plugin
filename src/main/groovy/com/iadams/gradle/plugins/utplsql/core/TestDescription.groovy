@@ -1,4 +1,4 @@
-package com.iadams.gradle.plugins.utplsql
+package com.iadams.gradle.plugins.utplsql.core
 
 import groovy.xml.MarkupBuilder
 

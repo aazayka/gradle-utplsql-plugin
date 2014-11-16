@@ -1,4 +1,4 @@
-package com.iadams.gradle.plugins.utplsql
+package com.iadams.gradle.plugins.utplsql.core
 
 import spock.lang.Specification
 import groovy.xml.MarkupBuilder

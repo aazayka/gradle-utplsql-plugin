@@ -5,12 +5,13 @@ import com.iadams.gradle.plugins.utplsql.tasks.ExecuteTestRule
 import nebula.test.PluginProjectSpec
 import org.gradle.api.Task
 import org.gradle.api.artifacts.Configuration
+import spock.lang.Ignore
 
 /**
  * Created by Iain Adams on 20/09/2014.
  */
 class UtplsqlPluginSpec extends PluginProjectSpec  {
-    static final String PLUGIN_ID = 'com.iadams.utplsqlplugin'
+    static final String PLUGIN_ID = 'com.iadams.utplsql'
 
     @Override
     String getPluginName() {
@@ -34,21 +35,5 @@ class UtplsqlPluginSpec extends PluginProjectSpec  {
             task != null
             task instanceof RunTestsTask
             task.description == 'Executes all utPLSQL tests.'
-    }
-
-    def "apply creates rule of type ExecuteTestRule"() {
-        setup:
-            Task task = project.tasks.findByName('executeTestBetwnstr')
-
-        expect:
-            task != null
-    }
-
-    def "apply creates rule of type DeployTestRule"() {
-        setup:
-            Task task = project.tasks.findByName('deployTestBetwnstr')
-
-        expect:
-            task != null
     }
 }

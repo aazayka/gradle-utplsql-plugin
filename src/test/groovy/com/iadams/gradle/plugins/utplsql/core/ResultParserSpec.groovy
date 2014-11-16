@@ -1,5 +1,8 @@
-package com.iadams.gradle.plugins.utplsql
+package com.iadams.gradle.plugins.utplsql.core
 
+import com.iadams.gradle.plugins.utplsql.core.ResultParser
+import com.iadams.gradle.plugins.utplsql.core.ResultParserException
+import com.iadams.gradle.plugins.utplsql.core.TestDescription
 import spock.lang.Specification
 
 /**

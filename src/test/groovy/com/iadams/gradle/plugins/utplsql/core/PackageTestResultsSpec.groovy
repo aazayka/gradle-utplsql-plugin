@@ -1,7 +1,6 @@
-package com.iadams.gradle.plugins.utplsql
+package com.iadams.gradle.plugins.utplsql.core
 
 import spock.lang.Specification
-import groovy.xml.MarkupBuilder
 import org.custommonkey.xmlunit.Diff
 import org.custommonkey.xmlunit.XMLUnit
 

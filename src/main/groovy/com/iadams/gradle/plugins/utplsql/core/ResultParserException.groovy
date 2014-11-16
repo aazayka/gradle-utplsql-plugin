@@ -1,4 +1,4 @@
-package com.iadams.gradle.plugins.utplsql
+package com.iadams.gradle.plugins.utplsql.core
 
 /**
  * Created by Iain Adams on 23/09/2014.

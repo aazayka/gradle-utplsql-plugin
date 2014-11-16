@@ -1,6 +1,4 @@
-package com.iadams.gradle.plugins.utplsql
-
-import com.sun.org.apache.xalan.internal.xsltc.compiler.util.MatchGenerator
+package com.iadams.gradle.plugins.utplsql.core
 
 import java.util.regex.Matcher
 /**

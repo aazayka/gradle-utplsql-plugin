@@ -1,4 +1,4 @@
-package com.iadams.gradle.plugins.utplsql
+package com.iadams.gradle.plugins.utplsql.core
 
 import groovy.xml.MarkupBuilder
 
@@ -11,7 +11,7 @@ class PackageTestResults {
     def getTestsRun() { descriptions.size() }
     def getTestFailures() { descriptions.count { it.failure } }
 
-    def toXML(String name, def duration){
+    String toXML(String name, def duration){
         def writer = new StringWriter()
         def xml = new MarkupBuilder(writer)
         xml.setDoubleQuotes(true)
