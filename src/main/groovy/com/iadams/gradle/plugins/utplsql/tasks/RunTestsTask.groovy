@@ -5,6 +5,7 @@ import groovy.sql.Sql
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.TaskAction
 
@@ -69,8 +70,7 @@ class RunTestsTask extends DefaultTask {
      * Location to which we will write the report file. Defaults to the gradle buildDir.
      *
      */
-    @Input
-    @Optional
+    @OutputDirectory
     File outputDirectory
 
     /**
@@ -94,19 +94,18 @@ class RunTestsTask extends DefaultTask {
     void runUtplsqlTests() {
         //TODO This task should really generate a list of packages from the test-source folder
 
-        println "URL: ${getUrl()}"
-        println "Username: ${getUsername()}"
-        println "Password: ${getPassword()}"
-        println "Driver: ${getDriver()}"
-        println "Packages: ${getPackages()}"
-        println "TestMethod: ${getTestMethod()}"
-        println "SetupMethod: ${getSetupMethod()}"
-        println "OutputDir: ${outputDirectory}"
+        project.logger.info "URL: ${getUrl()}"
+        project.logger.info "Username: ${getUsername()}"
+        project.logger.info "Driver: ${getDriver()}"
+        project.logger.info "Packages: ${getPackages()}"
+        project.logger.info "TestMethod: ${getTestMethod()}"
+        project.logger.info "SetupMethod: ${getSetupMethod()}"
+        project.logger.info "OutputDir: ${outputDirectory}"
 
         try {
             def sql = Sql.newInstance(getUrl() ,getUsername() ,getPassword() ,getDriver())
 
-            UtplsqlRunner runner = new UtplsqlRunner(new File("$outputDirectory/utplsql"), logger)
+            UtplsqlRunner runner = new UtplsqlRunner(outputDirectory, logger)
             ReportGenerator repGen = new ReportGenerator()
 
             if(getPackages()) {

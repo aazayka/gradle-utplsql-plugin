@@ -7,9 +7,9 @@ class UtplsqlPluginExtension {
     //TODO complete a full range of extensions allowing configuration of output / source dirs etc.
     String driver = "oracle.jdbc.driver.OracleDriver"
     String url
-
     String username
     String password
+    String outputDir = "build/utplsql"
     String testMethod
     def packages = []
     String setupMethod

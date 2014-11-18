@@ -26,9 +26,22 @@ class ExecuteTestRule implements Rule {
 
     void apply(String taskName) {
         if (taskName.startsWith(PREFIX)) {
-            project.getTasks().create(taskName)
+            project.task(taskName, type: RunTestsTask) {
 
-            //TODO complete the rule to execute a specific test.
+                def extension = project.extensions.utplsql
+
+                def packageName = taskName - PREFIX
+                driver = extension.driver
+                url = extension.url
+                username = extension.username
+                password = extension.password
+                testMethod = extension.testMethod
+                packages = [packageName]
+                setupMethod = extension.setupMethod
+                outputDirectory = project.file(extension.outputDir)
+                failOnNoTests = extension.failOnNoTests
+                outputFailuresToConsole = extension.outputFailuresToConsole
+            }
         }
     }
 }
