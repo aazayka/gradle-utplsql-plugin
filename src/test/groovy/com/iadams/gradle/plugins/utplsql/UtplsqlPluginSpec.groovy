@@ -1,11 +1,8 @@
 package com.iadams.gradle.plugins.utplsql
 
 import com.iadams.gradle.plugins.utplsql.tasks.RunTestsTask
-import com.iadams.gradle.plugins.utplsql.tasks.ExecuteTestRule
 import nebula.test.PluginProjectSpec
 import org.gradle.api.Task
-import org.gradle.api.artifacts.Configuration
-import spock.lang.Ignore
 
 /**
  * Created by Iain Adams on 20/09/2014.

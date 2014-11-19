@@ -18,6 +18,7 @@ class UtplsqlRunner {
     org.slf4j.Logger logger
     ReportGenerator reportGen
     Sql sql
+    PackageTestResults results
 
     UtplsqlRunner(File outputDir, org.slf4j.Logger logger)
     {
@@ -43,19 +44,16 @@ class UtplsqlRunner {
         try {
             def start = new Date()
 
-            def setup = testMethod.equals('test') ? ' recompile_in => FALSE,' : ''              //; $Sql.VARCHAR := utplsql2.runnum
-            //sql.call("{call utplsql.${Sql.expand(testMethod)}('${Sql.expand(packageName)}', ${Sql.expand(setup)} per_method_setup_in => ${Sql.expand(setupMethod)}); $Sql.VARCHAR := utplsql2.runnum}") { number->
-            /*sql.call("{call utplsql.test('${Sql.expand(packageName)}', recompile_in => FALSE, per_method_setup_in => FALSE); $Sql.VARCHAR := utplsql2.runnum}") { number->
-                runId = number
-                println "runnum: $number"
-            }*/
-            //def runId = sql.call("{call utplsql.test('${Sql.expand(packageName)}', recompile_in => FALSE, per_method_setup_in => FALSE); $Sql.VARCHAR := utplsql2.runnum}")
+            def setup = testMethod.equals('test') ? ' recompile_in => FALSE,' : ''
+
             def runId = sql.call("{call utplsql.${Sql.expand(testMethod)}('${Sql.expand(packageName)}', ${Sql.expand(setup)} per_method_setup_in => ${Sql.expand(setupMethod.toString())}); $Sql.VARCHAR := utplsql2.runnum}")
 
             def stop = new Date()
             TimeDuration td = TimeCategory.minus( stop, start )
 
-            return reportGen.generateReport(sql, runId, packageName, "${td.seconds}.${td.millis}".toFloat())
+            results = reportGen.generateReport(sql, runId )
+
+            return results.toXML(packageName, "${td.seconds}.${td.millis}".toFloat())
         }
         catch (SQLException e) {
             throw new UtplsqlRunnerException("Database communication error.", e)

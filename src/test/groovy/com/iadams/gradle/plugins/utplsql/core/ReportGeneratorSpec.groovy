@@ -22,7 +22,7 @@ class ReportGeneratorSpec extends Specification {
             sql.rows(_) >> [[status:'SUCCESS', description:"BETWNSTR.UT_BETWNSTR: ISNULL \"null end\" Expected \"\" and got \"\""]]
 
         when:
-            def result = generator.generateReport(sql, runId, 'UT_BETWNSTR', '0.123')
+            def result = generator.generateReport(sql, runId).toXML('UT_BETWNSTR', '0.123')
 
         then:
             new Diff( TestXmlFixtures.SINGLE_BETWNSTR_XML_RESULTS, result).similar()
@@ -34,7 +34,7 @@ class ReportGeneratorSpec extends Specification {
         sql.rows(_) >> [[status:'FAILURE', description:"BETWNSTR.UT_BETWNSTR: EQ \"normal\" Expected \"cde\" and got \"dde\""]]
 
         when:
-        def result = generator.generateReport(sql, runId, 'UT_BETWNSTR', '0.123')
+        def result = generator.generateReport(sql, runId).toXML('UT_BETWNSTR', '0.123')
 
         then:
         new Diff( TestXmlFixtures.SINGLE_FAILURE_XML_RESULTS, result).similar()

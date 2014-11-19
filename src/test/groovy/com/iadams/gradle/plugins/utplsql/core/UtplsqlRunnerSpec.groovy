@@ -16,6 +16,7 @@ class UtplsqlRunnerSpec extends Specification {
     File mockfile = Mock(File)
     Sql sql = Mock(Sql)
     ReportGenerator reportGen = Mock(ReportGenerator)
+    PackageTestResults pkgResults = Mock(PackageTestResults)
 
     def setup(){
         Logger slf4jLogger = LoggerFactory.getLogger('logger')
@@ -27,7 +28,8 @@ class UtplsqlRunnerSpec extends Specification {
     def "test a package"(){
         given:
             sql.call(_) >> 1
-            reportGen.generateReport(_, _, _, _) >> "<pretend xml>"
+            reportGen.generateReport(_, _) >> pkgResults
+            pkgResults.toXML(_, _) >> '<pretend xml>'
 
         when:
             def result = runner.runPackage('betwnstr', 'test', true)
@@ -39,7 +41,8 @@ class UtplsqlRunnerSpec extends Specification {
     def "run package's tests"(){
         given:
         sql.call(_) >> 1
-        reportGen.generateReport(_, _, _, _) >> "<pretend xml>"
+        reportGen.generateReport(_, _) >> pkgResults
+        pkgResults.toXML(_, _) >> '<pretend xml>'
 
         when:
         def result = runner.runPackage('betwnstr', 'run', false)
@@ -51,7 +54,6 @@ class UtplsqlRunnerSpec extends Specification {
     def "test a package with a broken sql connection"(){
         given:
             sql.call(_) >> { throw new SQLException("Unable to connect to the DB!") }
-            reportGen.generateReport(_, _, _, _) >> "<pretend xml>"
 
         when:
             runner.runPackage('betwnstr', 'test', true)

@@ -6,8 +6,8 @@ import org.gradle.api.Project
 import org.gradle.api.plugins.BasePlugin
 import com.iadams.gradle.plugins.utplsql.tasks.RunTestsTask
 import com.iadams.gradle.plugins.utplsql.tasks.DeployTestsTask
-import com.iadams.gradle.plugins.utplsql.tasks.ExecuteTestRule
-import com.iadams.gradle.plugins.utplsql.tasks.DeployTestRule
+import com.iadams.gradle.plugins.utplsql.tasks.rules.ExecuteTestRule
+import com.iadams.gradle.plugins.utplsql.tasks.rules.DeployTestRule
 
 /**
  * Created by Iain Adams on 02/09/2014.

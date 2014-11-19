@@ -1,5 +1,6 @@
-package com.iadams.gradle.plugins.utplsql.tasks
+package com.iadams.gradle.plugins.utplsql.tasks.rules
 
+import com.iadams.gradle.plugins.utplsql.tasks.DeployTestsTask
 import org.gradle.api.Project
 import org.gradle.api.Rule
 

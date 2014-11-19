@@ -6,17 +6,14 @@ import groovy.sql.Sql
  * Created by Iain Adams on 29/09/2014.
  */
 class ReportGenerator {
-    File reportDir
-
     /**
+     * Generates a XML junit style report for tests with the given runId in the database.
      *
      * @param sql
      * @param runId
-     * @param name
-     * @param duration
      * @return
      */
-    String generateReport(Sql sql, def runId, String name, def duration) {
+    PackageTestResults generateReport(Sql sql, def runId) {
 
         def results = new PackageTestResults()
         def rows = sql.rows("select status, description from utr_outcome where run_id = ${Sql.expand(runId)} order by outcome_id DESC")
@@ -26,6 +23,6 @@ class ReportGenerator {
             results.descriptions.add(desc)
         }
 
-        return results.toXML(name, duration)
+        return results
     }
 }

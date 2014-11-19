@@ -106,12 +106,22 @@ class RunTestsTask extends DefaultTask {
             def sql = Sql.newInstance(getUrl() ,getUsername() ,getPassword() ,getDriver())
 
             UtplsqlRunner runner = new UtplsqlRunner(outputDirectory, logger)
-            ReportGenerator repGen = new ReportGenerator()
+            runner.reportGen = new ReportGenerator()
+            runner.sql = sql
 
-            if(getPackages()) {
-                getPackages().each{
-                    new File("${runner.outputDir}/TEST-${it}.xml").write(runner.runPackage(sql, it, getTestMethod(), getSetupMethod().toBoolean(), repGen))
+            def failed = false
+
+            getPackages().each{
+                new File("${runner.outputDir}/TEST-${it}.xml").write(runner.runPackage( it, getTestMethod(), getSetupMethod().toBoolean()))
+
+                if(runner.results.getTestFailures()){
+                    failed = true
+                    logger.error "Package $it contains ${runner.results.getTestFailures()} failing tests."
                 }
+            }
+
+            if(failed){
+                throw new GradleException("Failing unit tests.")
             }
         }
         catch (ClassNotFoundException e) {
