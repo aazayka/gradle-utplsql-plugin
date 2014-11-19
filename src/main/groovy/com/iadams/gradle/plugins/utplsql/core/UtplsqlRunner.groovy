@@ -16,6 +16,8 @@ class UtplsqlRunner {
 
     File outputDir
     org.slf4j.Logger logger
+    ReportGenerator reportGen
+    Sql sql
 
     UtplsqlRunner(File outputDir, org.slf4j.Logger logger)
     {
@@ -36,7 +38,7 @@ class UtplsqlRunner {
      * @throws SQLException
      * @throws IOException
      */
-    def runPackage(Sql sql, String packageName, String testMethod, boolean setupMethod, ReportGenerator reportGen) throws SQLException, IOException
+    def runPackage(String packageName, String testMethod, boolean setupMethod) throws SQLException, IOException
     {
         try {
             def start = new Date()
@@ -56,8 +58,7 @@ class UtplsqlRunner {
             return reportGen.generateReport(sql, runId, packageName, "${td.seconds}.${td.millis}".toFloat())
         }
         catch (SQLException e) {
-            logger.error e.message
-            return false
+            throw new UtplsqlRunnerException("Database communication error.", e)
         }
     }
 

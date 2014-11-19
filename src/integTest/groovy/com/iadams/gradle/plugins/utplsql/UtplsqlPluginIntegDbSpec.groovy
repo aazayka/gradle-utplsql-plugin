@@ -10,7 +10,8 @@ import spock.lang.Unroll
 class UtplsqlPluginIntegDbSpec extends IntegrationSpec {
 
     //TODO Actually write some tests using a DB!
-    def "should allow to run pldoc with different Gradle versions"() {
+
+    def "run the tasks task"() {
         setup:
             useToolingApi = false
             buildFile << '''

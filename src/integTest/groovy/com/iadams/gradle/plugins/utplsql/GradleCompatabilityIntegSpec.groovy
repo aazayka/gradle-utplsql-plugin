@@ -10,7 +10,7 @@ import spock.lang.Unroll
 class GradleCompatabilityIntegSpec extends IntegrationSpec {
 
     @Unroll("should use Gradle #requestedGradleVersion when requested")
-    def "should allow to run pldoc with different Gradle versions"() {
+    def "should allow to run utplsql with different Gradle versions"() {
         setup:
             useToolingApi = false
             buildFile << '''

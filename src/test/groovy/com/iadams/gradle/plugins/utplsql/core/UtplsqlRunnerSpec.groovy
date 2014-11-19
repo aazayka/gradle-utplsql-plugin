@@ -20,6 +20,8 @@ class UtplsqlRunnerSpec extends Specification {
     def setup(){
         Logger slf4jLogger = LoggerFactory.getLogger('logger')
         runner = new UtplsqlRunner(mockfile, slf4jLogger)
+        runner.reportGen = reportGen
+        runner.sql = sql
     }
 
     def "test a package"(){
@@ -28,7 +30,7 @@ class UtplsqlRunnerSpec extends Specification {
             reportGen.generateReport(_, _, _, _) >> "<pretend xml>"
 
         when:
-            def result = runner.runPackage(sql, 'betwnstr', 'test', true , reportGen)
+            def result = runner.runPackage('betwnstr', 'test', true)
 
         then:
             result == "<pretend xml>"
@@ -40,7 +42,7 @@ class UtplsqlRunnerSpec extends Specification {
         reportGen.generateReport(_, _, _, _) >> "<pretend xml>"
 
         when:
-        def result = runner.runPackage(sql, 'betwnstr', 'run', false , reportGen)
+        def result = runner.runPackage('betwnstr', 'run', false)
 
         then:
         result == "<pretend xml>"
@@ -52,9 +54,9 @@ class UtplsqlRunnerSpec extends Specification {
             reportGen.generateReport(_, _, _, _) >> "<pretend xml>"
 
         when:
-            def result = runner.runPackage(sql, 'betwnstr', 'test', true , reportGen)
+            runner.runPackage('betwnstr', 'test', true)
 
         then:
-            !result
+            thrown(UtplsqlRunnerException)
     }
 }

@@ -1,5 +1,6 @@
 package com.iadams.gradle.plugins.utplsql
 
+import com.iadams.gradle.plugins.utplsql.extensions.UtplsqlPluginExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.BasePlugin

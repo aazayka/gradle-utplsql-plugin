@@ -94,13 +94,13 @@ class RunTestsTask extends DefaultTask {
     void runUtplsqlTests() {
         //TODO This task should really generate a list of packages from the test-source folder
 
-        project.logger.info "URL: ${getUrl()}"
-        project.logger.info "Username: ${getUsername()}"
-        project.logger.info "Driver: ${getDriver()}"
-        project.logger.info "Packages: ${getPackages()}"
-        project.logger.info "TestMethod: ${getTestMethod()}"
-        project.logger.info "SetupMethod: ${getSetupMethod()}"
-        project.logger.info "OutputDir: ${outputDirectory}"
+        logger.info "URL: ${getUrl()}"
+        logger.info "Username: ${getUsername()}"
+        logger.info "Driver: ${getDriver()}"
+        logger.info "Packages: ${getPackages()}"
+        logger.info "TestMethod: ${getTestMethod()}"
+        logger.info "SetupMethod: ${getSetupMethod()}"
+        logger.info "OutputDir: ${outputDirectory}"
 
         try {
             def sql = Sql.newInstance(getUrl() ,getUsername() ,getPassword() ,getDriver())
