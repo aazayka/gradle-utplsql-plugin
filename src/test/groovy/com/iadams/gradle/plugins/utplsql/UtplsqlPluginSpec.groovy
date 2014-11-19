@@ -19,18 +19,52 @@ class UtplsqlPluginSpec extends PluginProjectSpec  {
         project.apply plugin: pluginName
     }
 
+    def "apply creates task of type RunTestsTask"(){
+        setup:
+        Task task = project.tasks.findByName( UtplsqlPlugin.UTPLSQL_RUN_TESTS_TASK )
+
+        expect:
+        task != null
+        task instanceof RunTestsTask
+        task.description == 'Executes all utPLSQL tests.'
+    }
+
     def "check base plugin applies clean"() {
         expect:
             project.tasks.findByName('clean')
     }
 
-    def "apply creates task of type RunTestsTask"(){
-        setup:
-            Task task = project.tasks.findByName('runUtplsqlTests')
-
+    def "apply creates utplsql extension" () {
         expect:
-            task != null
-            task instanceof RunTestsTask
-            task.description == 'Executes all utPLSQL tests.'
+            project.extensions.findByName( UtplsqlPlugin.UTPLSQL_EXTENSION )
+    }
+
+    def "check default task uses the utplsql extension"() {
+        when:
+            project.utplsql {
+                driver = 'org.hsqldb.jdbcDriver'
+                url = 'jdbc:oracle:thin:@localhost:1521:test'
+                password = 'testing'
+                username = 'testing'
+                testMethod = 'test'
+                packages = ['betwnstr']
+                setupMethod = false
+                outputDir = 'build/other'
+                failOnNoTests = true
+                outputFailuresToConsole = true
+            }
+
+        then:
+            Task task = project.tasks.findByName( UtplsqlPlugin.UTPLSQL_RUN_TESTS_TASK )
+            task.driver == 'org.hsqldb.jdbcDriver'
+            task.url == 'jdbc:oracle:thin:@localhost:1521:test'
+            task.password == 'testing'
+            task.username == 'testing'
+            task.testMethod == 'test'
+            task.packages == ['betwnstr']
+            task.setupMethod == false
+            task.outputDir == project.file("$projectDir/build/other")
+            task.failOnNoTests == true
+            task.outputFailuresToConsole == true
     }
 }

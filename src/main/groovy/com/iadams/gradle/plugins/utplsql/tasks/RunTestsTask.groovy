@@ -64,14 +64,14 @@ class RunTestsTask extends DefaultTask {
      */
     @Input
     @Optional
-    String setupMethod
+    Boolean setupMethod
 
     /**
      * Location to which we will write the report file. Defaults to the gradle buildDir.
      *
      */
     @OutputDirectory
-    File outputDirectory
+    File outputDir
 
     /**
      * If there is a connection problem or DB PLSQL installation error the plugin reports 0 tests run. This is an error condition which should be
@@ -100,19 +100,19 @@ class RunTestsTask extends DefaultTask {
         logger.info "Packages: ${getPackages()}"
         logger.info "TestMethod: ${getTestMethod()}"
         logger.info "SetupMethod: ${getSetupMethod()}"
-        logger.info "OutputDir: ${outputDirectory}"
+        logger.info "OutputDir: ${getOutputDir()}"
 
         try {
             def sql = Sql.newInstance(getUrl() ,getUsername() ,getPassword() ,getDriver())
 
-            UtplsqlRunner runner = new UtplsqlRunner(outputDirectory, logger)
+            UtplsqlRunner runner = new UtplsqlRunner(getOutputDir(), logger)
             runner.reportGen = new ReportGenerator()
             runner.sql = sql
 
             def failed = false
 
             getPackages().each{
-                new File("${runner.outputDir}/TEST-${it}.xml").write(runner.runPackage( it, getTestMethod(), getSetupMethod().toBoolean()))
+                new File("${runner.outputDir}/TEST-${it}.xml").write(runner.runPackage( it, getTestMethod(), getSetupMethod()))
 
                 if(runner.results.getTestFailures()){
                     failed = true

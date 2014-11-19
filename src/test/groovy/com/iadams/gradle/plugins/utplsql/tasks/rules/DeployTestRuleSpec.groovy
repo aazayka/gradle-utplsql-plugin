@@ -1,4 +1,4 @@
-package com.iadams.gradle.plugins.utplsql.tasks
+package com.iadams.gradle.plugins.utplsql.tasks.rules
 
 import org.gradle.api.Project
 import org.gradle.api.Task

@@ -45,7 +45,7 @@ class UtplsqlPluginExtension {
     /**
      * The setup method to use. set to TRUE to execute setup and teardown for each procedure. FALSE to execute for each package. Default is FALSE.
      */
-    String setupMethod = false
+    Boolean setupMethod = false
 
     /**
     * In the event of no tests being run, fail the build.

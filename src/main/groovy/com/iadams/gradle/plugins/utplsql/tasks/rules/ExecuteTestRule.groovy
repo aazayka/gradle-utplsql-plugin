@@ -39,7 +39,7 @@ class ExecuteTestRule implements Rule {
                 testMethod = extension.testMethod
                 packages = [packageName]
                 setupMethod = extension.setupMethod
-                outputDirectory = project.file(extension.outputDir)
+                outputDir = project.file(extension.outputDir)
                 failOnNoTests = extension.failOnNoTests
                 outputFailuresToConsole = extension.outputFailuresToConsole
             }

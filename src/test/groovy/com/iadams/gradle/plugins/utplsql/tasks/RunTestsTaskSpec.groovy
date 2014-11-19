@@ -8,22 +8,23 @@ import spock.lang.Specification
 /**
  * Created by Iain Adams
  */
-class ExecuteTestRuleSpec extends Specification {
+class RunTestsTaskSpec extends Specification {
+    static final TASK_NAME = 'runTests'
     Project project
 
     void setup(){
         project = ProjectBuilder.builder().build()
     }
 
-    def "add a task from the rule"() {
+    def "create task with appropriate configuration"(){
         expect:
-            project.tasks.findByName( 'executeTestBetwnstr' ) == null
+        project.tasks.findByName( TASK_NAME ) == null
 
         when:
-            project.task( 'executeTestBetwnstr' )
+        project.task( TASK_NAME, type: RunTestsTask )
 
         then:
-            Task task = project.tasks.findByName( 'executeTestBetwnstr' )
-            task != null
+        Task task = project.tasks.findByName( TASK_NAME )
+        task != null
     }
 }

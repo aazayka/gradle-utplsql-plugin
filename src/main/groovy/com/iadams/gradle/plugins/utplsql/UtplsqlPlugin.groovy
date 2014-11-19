@@ -53,7 +53,7 @@ class UtplsqlPlugin implements Plugin<Project> {
             conventionMapping.testMethod = { extension.testMethod }
             conventionMapping.packages = { extension.packages }
             conventionMapping.setupMethod = { extension.setupMethod }
-            conventionMapping.outputDirectory = { project.file(extension.outputDir)}
+            conventionMapping.outputDir = { project.file(extension.outputDir)}
             conventionMapping.failOnNoTests = { extension.failOnNoTests }
             conventionMapping.outputFailuresToConsole = { extension.outputFailuresToConsole }
         }
