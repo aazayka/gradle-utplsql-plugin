@@ -28,6 +28,8 @@ class UtplsqlPlugin implements Plugin<Project> {
 
         project.extensions.create( UTPLSQL_EXTENSION, UtplsqlPluginExtension )
 
+        project.configurations{ driver }
+
         //project.configurations{ utplsqlToHtml }
 
         /*ClassLoader antClassLoader = org.apache.tools.ant.Project.class.classLoader
@@ -46,6 +48,7 @@ class UtplsqlPlugin implements Plugin<Project> {
         def extension = project.extensions.findByName( UTPLSQL_EXTENSION )
 
         project.tasks.withType( RunTestsTask ) {
+
             conventionMapping.driver = { extension.driver }
             conventionMapping.url = { extension.url }
             conventionMapping.username = { extension.username }

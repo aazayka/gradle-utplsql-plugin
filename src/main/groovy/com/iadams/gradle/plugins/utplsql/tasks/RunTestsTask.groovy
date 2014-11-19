@@ -103,6 +103,11 @@ class RunTestsTask extends DefaultTask {
         logger.info "OutputDir: ${getOutputDir()}"
 
         try {
+            //TODO extract the base configuration for the oracle driver into an abstract task.
+            project.configurations.driver.each {File file ->
+                project.gradle.class.classLoader.addURL(file.toURL())
+            }
+
             def sql = Sql.newInstance(getUrl() ,getUsername() ,getPassword() ,getDriver())
 
             UtplsqlRunner runner = new UtplsqlRunner(getOutputDir(), logger)
