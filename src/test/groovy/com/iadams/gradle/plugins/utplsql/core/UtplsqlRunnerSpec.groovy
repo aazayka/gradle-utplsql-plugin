@@ -27,7 +27,7 @@ class UtplsqlRunnerSpec extends Specification {
 
     def "test a package"(){
         given:
-            sql.call(_) >> 1
+            sql.call(_,_) >> {1}
             reportGen.generateReport(_, _) >> pkgResults
             pkgResults.toXML(_, _) >> '<pretend xml>'
 
@@ -40,7 +40,7 @@ class UtplsqlRunnerSpec extends Specification {
 
     def "run package's tests"(){
         given:
-        sql.call(_) >> 1
+        sql.call(_,_) >> {1}
         reportGen.generateReport(_, _) >> pkgResults
         pkgResults.toXML(_, _) >> '<pretend xml>'
 
@@ -53,7 +53,7 @@ class UtplsqlRunnerSpec extends Specification {
 
     def "test a package with a broken sql connection"(){
         given:
-            sql.call(_) >> { throw new SQLException("Unable to connect to the DB!") }
+            sql.call(_,_) >> { throw new SQLException("Unable to connect to the DB!") }
 
         when:
             runner.runPackage('betwnstr', 'test', true)

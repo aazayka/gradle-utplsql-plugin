@@ -1,5 +1,6 @@
 package com.iadams.gradle.plugins.utplsql.tasks
 
+import com.iadams.gradle.plugins.utplsql.core.UtplsqlRunner
 import com.iadams.gradle.plugins.utplsql.core.ReportGenerator
 import groovy.sql.Sql
 import org.gradle.api.DefaultTask
@@ -8,9 +9,6 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.TaskAction
-
-import com.iadams.gradle.plugins.utplsql.core.UtplsqlRunner
-
 import java.sql.SQLException
 
 /**
@@ -90,8 +88,12 @@ class RunTestsTask extends DefaultTask {
     @Optional
     Boolean outputFailuresToConsole
 
+    /**
+     *
+     * @throws GradleException
+     */
     @TaskAction
-    void runUtplsqlTests() {
+    void runUtplsqlTests() throws GradleException {
         //TODO This task should really generate a list of packages from the test-source folder
 
         logger.info "URL: ${getUrl()}"
@@ -114,26 +116,32 @@ class RunTestsTask extends DefaultTask {
             runner.reportGen = new ReportGenerator()
             runner.sql = sql
 
-            def failed = false
+            def failedTests = false
+            def totalTests = 0
 
             getPackages().each{
                 new File("${runner.outputDir}/TEST-${it}.xml").write(runner.runPackage( it, getTestMethod(), getSetupMethod()))
+                totalTests += runner.results.getTestsRun()
 
                 if(runner.results.getTestFailures()){
-                    failed = true
+                    failedTests = true
                     logger.error "Package $it contains ${runner.results.getTestFailures()} failing tests."
                 }
             }
 
-            if(failed){
+            if(totalTests == 0 && project.extensions.utplsql.failOnNoTests){
+                throw new GradleException("No tests were run.")
+            }
+
+            if(failedTests){
                 throw new GradleException("Failing unit tests.")
             }
         }
         catch (ClassNotFoundException e) {
-            throw new GradleException("JDBC Driver class not found", e)
+            throw new GradleException("JDBC Driver class not found.", e)
         }
         catch (SQLException e) {
-            throw new GradleException("Error communicating with the database", e)
+            throw new GradleException("Error communicating with the database.", e)
         }
     }
 }

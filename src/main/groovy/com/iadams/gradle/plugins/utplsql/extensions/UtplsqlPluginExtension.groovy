@@ -13,17 +13,17 @@ class UtplsqlPluginExtension {
     /**
      * The JDBC URL to use.
      */
-    String url
+    String url = ''
 
     /**
      * The username to connect to the database.
      */
-    String username
+    String username = ''
 
     /**
      * The password to connect to the database.
      */
-    String password
+    String password = ''
 
     /**
      * The source directory for all the unit tests.
@@ -50,6 +50,6 @@ class UtplsqlPluginExtension {
     /**
     * In the event of no tests being run, fail the build.
     */
-    Boolean failOnNoTests
+    Boolean failOnNoTests = true
     Boolean outputFailuresToConsole
 }

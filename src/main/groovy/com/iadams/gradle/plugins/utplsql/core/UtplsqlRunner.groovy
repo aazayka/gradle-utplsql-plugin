@@ -37,7 +37,6 @@ class UtplsqlRunner {
      * @param setupMethod
      * @return
      * @throws SQLException
-     * @throws IOException
      */
     def runPackage(String packageName, String testMethod, boolean setupMethod) throws SQLException, IOException
     {
@@ -46,7 +45,11 @@ class UtplsqlRunner {
 
             def setup = testMethod.equals('test') ? ' recompile_in => FALSE,' : ''
 
-            def runId = sql.call("{call utplsql.${Sql.expand(testMethod)}('${Sql.expand(packageName)}', ${Sql.expand(setup)} per_method_setup_in => ${Sql.expand(setupMethod.toString())}); $Sql.VARCHAR := utplsql2.runnum}")
+            def runId
+
+            sql.call("{call utplsql.${Sql.expand(testMethod)}('${Sql.expand(packageName)}', ${Sql.expand(setup)} per_method_setup_in => ${Sql.expand(setupMethod.toString())}); $Sql.VARCHAR := utplsql2.runnum}"){ result->
+                runId = result
+            }
 
             def stop = new Date()
             TimeDuration td = TimeCategory.minus( stop, start )
