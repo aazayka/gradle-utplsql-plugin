@@ -27,13 +27,19 @@ class DeployTestRule implements Rule {
 
     void apply(String taskName) {
         if (taskName.startsWith(PREFIX)) {
-            project.getTasks().create(taskName, type: DeployTestsTask)
+            project.task(taskName, type: DeployTestsTask) {
+                def extension = project.extensions.utplsql
 
-            //TODO complete the rule to deploy a specific test (from the test source directory)
-            println project.utplsql.username
-            println project.utplsql.username
-            println project.utplsql.username
-            println project.utplsql.username
+                def packageName = taskName - PREFIX
+                driver = extension.driver
+                url = extension.url
+                username = extension.username
+                password = extension.password
+                outputDir = project.file(extension.outputDir)
+
+                extension.includes = "**/*${packageName}.*"
+            }
+
         }
     }
 }

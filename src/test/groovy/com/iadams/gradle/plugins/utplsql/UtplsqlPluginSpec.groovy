@@ -47,7 +47,6 @@ class UtplsqlPluginSpec extends PluginProjectSpec  {
                 password = 'testing'
                 username = 'testing'
                 testMethod = 'test'
-                packages = ['betwnstr']
                 setupMethod = false
                 outputDir = 'build/other'
                 failOnNoTests = true
@@ -61,7 +60,6 @@ class UtplsqlPluginSpec extends PluginProjectSpec  {
             task.password == 'testing'
             task.username == 'testing'
             task.testMethod == 'test'
-            task.packages == ['betwnstr']
             task.setupMethod == false
             task.outputDir == project.file("$projectDir/build/other")
             task.failOnNoTests == true

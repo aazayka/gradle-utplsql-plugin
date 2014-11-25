@@ -1,5 +1,6 @@
 package com.iadams.gradle.plugins.utplsql.extensions
 
+import org.gradle.api.Project
 /**
  * Created by Iain Adams.
  */
@@ -28,19 +29,27 @@ class UtplsqlPluginExtension {
     /**
      * The source directory for all the unit tests.
      */
-    String sourceDir = 'src/test/plsql'
+    String sourceDir
+
+    /**
+     * Filter for which files to include in the sourceDir
+     */
+    String includes = '**/*.pks, **/*.pkb'
+
+    /**
+     * Filter for which files to excludes in the sourceDir
+     */
+    String excludes = ''
 
     /**
      * The output directory for the test results.
      */
-    String outputDir = 'build/utplsql'
+    String outputDir
 
     /**
      * The type of test method to execute. Can be either test or run. Defaults to test.
      */
-    String testMethod = 'test'
-
-    def packages = []
+    String testMethod = 'run'
 
     /**
      * The setup method to use. set to TRUE to execute setup and teardown for each procedure. FALSE to execute for each package. Default is FALSE.
@@ -52,4 +61,9 @@ class UtplsqlPluginExtension {
     */
     Boolean failOnNoTests = true
     Boolean outputFailuresToConsole
+
+    UtplsqlPluginExtension( Project project) {
+        sourceDir = "${project.projectDir}/src/test/plsql"
+        outputDir = "${project.buildDir}/utplsql"
+    }
 }

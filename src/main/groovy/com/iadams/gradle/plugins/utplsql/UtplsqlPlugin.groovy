@@ -26,7 +26,7 @@ class UtplsqlPlugin implements Plugin<Project> {
 
         project.plugins.apply(BasePlugin.class)
 
-        project.extensions.create( UTPLSQL_EXTENSION, UtplsqlPluginExtension )
+        project.extensions.create( UTPLSQL_EXTENSION, UtplsqlPluginExtension, project)
 
         project.configurations{ driver }
 
@@ -54,21 +54,24 @@ class UtplsqlPlugin implements Plugin<Project> {
             conventionMapping.username = { extension.username }
             conventionMapping.password = { extension.password }
             conventionMapping.testMethod = { extension.testMethod }
-            conventionMapping.packages = { extension.packages }
+            sourceDir = new File( extension.sourceDir )
             conventionMapping.setupMethod = { extension.setupMethod }
             conventionMapping.outputDir = { project.file(extension.outputDir)}
             conventionMapping.failOnNoTests = { extension.failOnNoTests }
             conventionMapping.outputFailuresToConsole = { extension.outputFailuresToConsole }
         }
 
-        project.task( UTPLSQL_DEPLOY_TESTS_TASK , type: DeployTestsTask) {
-            description = 'Deploys all the UTPLSQL tests in the test folder with JDBC driver.'
-            group = 'utplsql'
+        project.tasks.withType( DeployTestsTask ) {
             conventionMapping.driver = { extension.driver }
             conventionMapping.url = { extension.url }
             conventionMapping.username = { extension.username }
             conventionMapping.password = { extension.password }
-            inputDirectory = new File("${project.projectDir}/src/test/plsql")
+            sourceDir = new File( extension.sourceDir )
+        }
+
+        project.task( UTPLSQL_DEPLOY_TESTS_TASK , type: DeployTestsTask) {
+            description = 'Deploys all the UTPLSQL tests in the test folder with JDBC driver.'
+            group = 'utplsql'
         }
 
         project.task( UTPLSQL_RUN_TESTS_TASK , type: RunTestsTask) {

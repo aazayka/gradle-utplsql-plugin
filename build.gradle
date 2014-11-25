@@ -58,3 +58,13 @@ task jacocoIntegTestReport(type: JacocoReport) {
         html.destination "${buildDir}/reports/jacocoIntegTestReport"
     }
 }
+
+task jacocoCombinedTestReport(type: JacocoReport) {
+    sourceSets sourceSets.main
+    executionData test, integTest
+    reports {
+        xml.enabled true
+        csv.enabled false
+        html.destination "${buildDir}/reports/jacocoCombinedTestReport"
+    }
+}

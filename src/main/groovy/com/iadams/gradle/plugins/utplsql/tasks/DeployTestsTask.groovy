@@ -1,5 +1,6 @@
 package com.iadams.gradle.plugins.utplsql.tasks
 
+import com.iadams.gradle.plugins.utplsql.UtplsqlPlugin
 import groovy.sql.Sql
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
@@ -45,7 +46,7 @@ class DeployTestsTask extends DefaultTask {
      *
      */
     @Input
-    File inputDirectory
+    File sourceDir
 
     /**
      * If there is a connection problem or DB PLSQL installation error the plugin reports 0 tests run. This is an error condition which should be
@@ -67,26 +68,28 @@ class DeployTestsTask extends DefaultTask {
     @TaskAction
     void deployUtplsqlTests() {
 
-        logger.quiet "Deploying ${inputDirectory.listFiles().size()} Unit Test Files"
+        def extension = project.extensions.findByName(UtplsqlPlugin.UTPLSQL_EXTENSION)
 
+        def packages = new FileNameFinder().getFileNames(sourceDir.absolutePath, extension.includes, extension.excludes)
+        packages = packages.collect { project.file(it) }
+        packages = packages.unique { a, b -> a <=> b }
+
+        logger.info "Deploying ${sourceDir.listFiles().size()} Unit Test Files"
         logger.info "URL: ${getUrl()}"
         logger.info "Username: ${getUsername()}"
         logger.info "Driver: ${getDriver()}"
-
-        //TODO Update the task to use a file find/include filter and set inputs/outputs
+        logger.info "Packages: ${packages}"
 
         try {
+            project.configurations.driver.each {File file ->
+                project.gradle.class.classLoader.addURL(file.toURL())
+            }
+
             def sql = Sql.newInstance(getUrl() ,getUsername() ,getPassword() ,getDriver())
 
-            inputDirectory.eachFileRecurse{
-                if(it.name.endsWith('.pks')) {
-                    logger.info "Deploying: $it.name"
-                    sql.execute( it.text[0..it.text.lastIndexOf(';')] )
-                }
-                if(it.name.endsWith('.pkb')) {
-                    logger.info "Deploying: $it.name"
-                    sql.execute( it.text[0..it.text.lastIndexOf(';')] )
-                }
+            packages.each{
+                logger.info "Deploying: $it.name"
+                sql.execute( it.text[0..it.text.lastIndexOf(';')] )
             }
         }
         catch (ClassNotFoundException e) {

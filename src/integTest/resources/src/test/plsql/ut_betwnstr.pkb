@@ -53,7 +53,7 @@ IS
          ,
          START_IN => 0
          ,
-         END_IN => 2
+         END_IN => 3
        );
        
       -- Assert success for "zero start"

@@ -6,7 +6,7 @@ import nebula.test.functional.ExecutionResult
 /**
  * Created by Iain Adams
  */
-class ExecuteTestIntegDbSpec extends IntegrationSpec {
+class DeployTestsIntegDbSpec extends IntegrationSpec {
 
     def setup() {
         directory('src/main/plsql')
@@ -16,7 +16,7 @@ class ExecuteTestIntegDbSpec extends IntegrationSpec {
         copyResources('src/test/plsql','src/test/plsql')
     }
 
-    def "use the rule to execute a test"() {
+    def "use the rule to deploy a test"() {
         setup:
             useToolingApi = false
             buildFile << '''
@@ -33,18 +33,18 @@ class ExecuteTestIntegDbSpec extends IntegrationSpec {
                             url = "jdbc:oracle:thin:@localhost:1521:test"
                             username = "testing"
                             password = "testing"
-                            testMethod = "test"
                         }
                         '''.stripIndent()
 
         when:
-            runTasksSuccessfully('executeTestBetwnstr')
+            ExecutionResult result = runTasksSuccessfully('deployTestbetwnstr')
 
         then:
-            fileExists("build/utplsql/TEST-Betwnstr.xml")
+            result.standardOutput.contains('Deploying: ut_betwnstr.pks')
+            result.standardOutput.contains('Deploying: ut_betwnstr.pkb')
     }
 
-    def "rule fails when executing a test that doesn't exist"() {
+    def "use task to deploy all tests"() {
         setup:
             useToolingApi = false
             buildFile << '''
@@ -61,43 +61,16 @@ class ExecuteTestIntegDbSpec extends IntegrationSpec {
                             url = "jdbc:oracle:thin:@localhost:1521:test"
                             username = "testing"
                             password = "testing"
-                            testMethod = "test"
                         }
                         '''.stripIndent()
 
         when:
-            ExecutionResult result = runTasksWithFailure('executeTestcheese')
+            ExecutionResult result = runTasksSuccessfully('deployUtplsqlTests')
 
         then:
-            result.getFailure().cause.cause.message == "No tests were run."
-    }
-
-    def "execute all the tests in the sourceDir"() {
-        setup:
-        useToolingApi = false
-        buildFile << '''
-                        apply plugin: 'com.iadams.utplsql'
-
-                        repositories {
-                            mavenLocal()
-                        }
-                        dependencies {
-                            driver "com.oracle:ojdbc6:11.2.0.1.0"
-                        }
-
-                        utplsql {
-                            url = "jdbc:oracle:thin:@localhost:1521:test"
-                            username = "testing"
-                            password = "testing"
-                            sourceDir = "${projectDir}/src/test/plsql"
-                        }
-                        '''.stripIndent()
-
-        when:
-            runTasksSuccessfully('runUtplsqlTests')
-
-        then:
-            fileExists("build/utplsql/TEST-ut_betwnstr.xml")
-            fileExists("build/utplsql/TEST-ut_simple_example.xml")
+            result.standardOutput.contains('Deploying: ut_betwnstr.pks')
+            result.standardOutput.contains('Deploying: ut_betwnstr.pkb')
+            result.standardOutput.contains('Deploying: ut_simple_example.pks')
+            result.standardOutput.contains('Deploying: ut_simple_example.pkb')
     }
 }
