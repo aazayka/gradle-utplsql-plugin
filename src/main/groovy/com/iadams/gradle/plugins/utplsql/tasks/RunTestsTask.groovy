@@ -71,7 +71,7 @@ class RunTestsTask extends DefaultTask {
      *
      */
     @Input
-    File sourceDir
+    String sourceDir
 
     /**
      * Location to which we will write the report file. Defaults to the gradle buildDir.
@@ -106,6 +106,7 @@ class RunTestsTask extends DefaultTask {
         logger.info "URL: ${getUrl()}"
         logger.info "Username: ${getUsername()}"
         logger.info "Driver: ${getDriver()}"
+        logger.info "SourceDir: ${project.file(getSourceDir())}"
         logger.info "Packages: ${getPackages()}"
         logger.info "TestMethod: ${getTestMethod()}"
         logger.info "SetupMethod: ${getSetupMethod()}"
@@ -114,7 +115,7 @@ class RunTestsTask extends DefaultTask {
         def extension = project.extensions.findByName(UtplsqlPlugin.UTPLSQL_EXTENSION)
 
         if(packages == []) {
-            def files = new FileNameFinder().getFileNames(sourceDir.absolutePath, extension.includes, extension.excludes)
+            def files = new FileNameFinder().getFileNames(getSourceDir(), extension.includes, extension.excludes)
             files = files.collect { project.file(it).name.replaceFirst(~/\.[^\.]+$/, '') }
             packages = files.unique { a, b -> a <=> b }
         }

@@ -46,7 +46,7 @@ class DeployTestsTask extends DefaultTask {
      *
      */
     @Input
-    File sourceDir
+    String sourceDir
 
     /**
      * If there is a connection problem or DB PLSQL installation error the plugin reports 0 tests run. This is an error condition which should be
@@ -70,14 +70,15 @@ class DeployTestsTask extends DefaultTask {
 
         def extension = project.extensions.findByName(UtplsqlPlugin.UTPLSQL_EXTENSION)
 
-        def packages = new FileNameFinder().getFileNames(sourceDir.absolutePath, extension.includes, extension.excludes)
+        def packages = new FileNameFinder().getFileNames(getSourceDir(), extension.includes, extension.excludes)
         packages = packages.collect { project.file(it) }
         packages = packages.unique { a, b -> a <=> b }
 
-        logger.info "Deploying ${sourceDir.listFiles().size()} Unit Test Files"
+        logger.info "Deploying ${packages.size()} Unit Test Files"
         logger.info "URL: ${getUrl()}"
         logger.info "Username: ${getUsername()}"
         logger.info "Driver: ${getDriver()}"
+        logger.info "SourceDir: ${project.file(getSourceDir())}"
         logger.info "Packages: ${packages}"
 
         try {

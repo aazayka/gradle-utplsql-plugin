@@ -5,7 +5,6 @@ import org.gradle.api.Project
  * Created by Iain Adams.
  */
 class UtplsqlPluginExtension {
-    //TODO complete a full range of extensions allowing configuration of output / source dirs etc.
     /**
      * The JDBC driver to use. Defaults to Oracle.
      */

@@ -30,13 +30,6 @@ class UtplsqlPlugin implements Plugin<Project> {
 
         project.configurations{ driver }
 
-        //project.configurations{ utplsqlToHtml }
-
-        /*ClassLoader antClassLoader = org.apache.tools.ant.Project.class.classLoader
-        project.configurations.utplsqlToHtml.each { File f ->
-            antClassLoader.addURL(f.toURI().toURL())
-        }*/
-
         addTasks(project)
     }
 
@@ -54,7 +47,7 @@ class UtplsqlPlugin implements Plugin<Project> {
             conventionMapping.username = { extension.username }
             conventionMapping.password = { extension.password }
             conventionMapping.testMethod = { extension.testMethod }
-            sourceDir = new File( extension.sourceDir )
+            conventionMapping.sourceDir = { extension.sourceDir }
             conventionMapping.setupMethod = { extension.setupMethod }
             conventionMapping.outputDir = { project.file(extension.outputDir)}
             conventionMapping.failOnNoTests = { extension.failOnNoTests }
@@ -66,7 +59,7 @@ class UtplsqlPlugin implements Plugin<Project> {
             conventionMapping.url = { extension.url }
             conventionMapping.username = { extension.username }
             conventionMapping.password = { extension.password }
-            sourceDir = new File( extension.sourceDir )
+            conventionMapping.sourceDir = { extension.sourceDir }
         }
 
         project.task( UTPLSQL_DEPLOY_TESTS_TASK , type: DeployTestsTask) {

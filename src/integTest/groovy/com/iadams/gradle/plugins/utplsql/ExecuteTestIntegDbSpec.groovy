@@ -9,9 +9,6 @@ import nebula.test.functional.ExecutionResult
 class ExecuteTestIntegDbSpec extends IntegrationSpec {
 
     def setup() {
-        directory('src/main/plsql')
-        copyResources('src/main/plsql','src/main/plsql')
-
         directory('src/test/plsql')
         copyResources('src/test/plsql','src/test/plsql')
     }
