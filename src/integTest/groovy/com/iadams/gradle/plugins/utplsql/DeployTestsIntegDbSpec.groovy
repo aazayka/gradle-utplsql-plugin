@@ -136,6 +136,6 @@ class DeployTestsIntegDbSpec extends IntegrationSpec {
         then:
         result.standardOutput.contains('Deploying: ut_broken.pks')
         result.standardOutput.contains('Deploying: ut_broken.pkb')
-        result.getFailure().message == "The package UT_BROKEN failed to compile."
+        result.getFailure().cause.cause.message == "The package ut_broken failed to compile."
     }
 }

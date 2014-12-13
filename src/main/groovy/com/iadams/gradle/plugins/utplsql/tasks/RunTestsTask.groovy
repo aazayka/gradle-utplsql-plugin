@@ -112,14 +112,14 @@ class RunTestsTask extends DefaultTask {
             packages = files.unique { a, b -> a <=> b }
         }
 
-        logger.info "URL: ${getUrl()}"
-        logger.info "Username: ${getUsername()}"
-        logger.info "Driver: ${getDriver()}"
-        logger.info "SourceDir: ${project.file(getSourceDir())}"
-        logger.info "Packages: ${getPackages()}"
-        logger.info "TestMethod: ${getTestMethod()}"
-        logger.info "SetupMethod: ${getSetupMethod()}"
-        logger.info "OutputDir: ${getOutputDir()}"
+        logger.info "[INFO] URL: ${getUrl()}"
+        logger.info "[INFO] Username: ${getUsername()}"
+        logger.info "[INFO] Driver: ${getDriver()}"
+        logger.info "[INFO] SourceDir: ${project.file(getSourceDir())}"
+        logger.info "[INFO] Packages: ${getPackages()}"
+        logger.info "[INFO] TestMethod: ${getTestMethod()}"
+        logger.info "[INFO] SetupMethod: ${getSetupMethod()}"
+        logger.info "[INFO] OutputDir: ${getOutputDir()}"
 
         try {
             //TODO extract the base configuration for the oracle driver into an abstract task.

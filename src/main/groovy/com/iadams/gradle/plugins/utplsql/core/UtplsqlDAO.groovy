@@ -27,7 +27,7 @@ class UtplsqlDAO {
      */
     def getPackageStatus(String packageName) throws SQLException
     {
-        def result = sql.rows("select status from user_objects where object_name = '${packageName.toString().toUpperCase()}'")
+        def result = sql.rows("select status from user_objects where object_name = ${packageName.toString().toUpperCase()}")
 
         if(result.size() == 0){
             return 'NO PACKAGE FOUND'
@@ -49,13 +49,17 @@ class UtplsqlDAO {
      * @return
      * @throws SQLException
      */
-    int runUtplsqlProcedure(String packageName, String testMethod, boolean setupMethod) throws SQLException
+    def runUtplsqlProcedure(String packageName, String testMethod, boolean setupMethod) throws SQLException
     {
         def setup = testMethod.equals('test') ? ' recompile_in => FALSE,' : ''
 
+        def returnVal
+
         sql.call("{call utplsql.${Sql.expand(testMethod)}('${Sql.expand(packageName)}', ${Sql.expand(setup)} per_method_setup_in => ${Sql.expand(setupMethod.toString())}); $Sql.VARCHAR := utplsql2.runnum}") { result ->
-            return result
+            returnVal = result            
         }
+
+        return returnVal
     }
 
     /**
@@ -67,12 +71,10 @@ class UtplsqlDAO {
     def recompilePackage(String packageName) throws UtplsqlDAOException
     {
         try {
-            def compile1 = sql.execute("ALTER PACKAGE ${Sql.expand(packageName.toString().toUpperCase())} COMPILE")
-            def compile2 = sql.execute("ALTER PACKAGE ${Sql.expand(packageName.toString().toUpperCase())} COMPILE BODY")
+            sql.execute("ALTER PACKAGE ${Sql.expand(packageName.toString().toUpperCase())} COMPILE")
+            sql.execute("ALTER PACKAGE ${Sql.expand(packageName.toString().toUpperCase())} COMPILE BODY")
 
-            if (compile1 && compile2) {
-                return true
-            } else {
+            if(getPackageStatus(packageName)!='VALID'){
                 throw new UtplsqlDAOException("The package $packageName failed to compile.")
             }
         }

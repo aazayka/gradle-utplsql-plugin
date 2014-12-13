@@ -76,12 +76,12 @@ class DeployTestsTask extends DefaultTask {
         packages = packages.collect { project.file(it) }
         packages = packages.unique { a, b -> a <=> b }
 
-        logger.info "Deploying ${packages.size()} Unit Test Files"
-        logger.info "URL: ${getUrl()}"
-        logger.info "Username: ${getUsername()}"
-        logger.info "Driver: ${getDriver()}"
-        logger.info "SourceDir: ${project.file(getSourceDir())}"
-        logger.info "Packages: ${packages}"
+        logger.info "[INFO] Deploying ${packages.size()} Unit Test Files"
+        logger.info "[INFO] URL: ${getUrl()}"
+        logger.info "[INFO] Username: ${getUsername()}"
+        logger.info "[INFO] Driver: ${getDriver()}"
+        logger.info "[INFO] SourceDir: ${project.file(getSourceDir())}"
+        logger.info "[INFO] Packages: ${packages}"
 
         try {
             project.configurations.driver.each {File file ->
@@ -92,7 +92,7 @@ class DeployTestsTask extends DefaultTask {
             def dao = new UtplsqlDAO(sql)
 
             packages.each{
-                logger.info "Deploying: $it.name"
+                logger.info "[INFO] Deploying: $it.name"
                 sql.execute( it.text[0..it.text.lastIndexOf(';')] )
             }
 
@@ -100,7 +100,7 @@ class DeployTestsTask extends DefaultTask {
             packages = packages.unique { a, b -> a <=> b }
 
             packages.each{
-                logger.debug "Recompiling $it"
+                logger.debug "[DEBUG] Recompiling $it"
                 dao.recompilePackage(it)
             }
         }

@@ -54,6 +54,7 @@ class UtplsqlRunner {
                     def start = new Date()
 
                     def runId = dao.runUtplsqlProcedure(packageName,testMethod,setupMethod)
+                    logger.info "[INFO] RunID: $runId"
 
                     def stop = new Date()
                     TimeDuration td = TimeCategory.minus(stop, start)

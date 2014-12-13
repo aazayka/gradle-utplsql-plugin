@@ -43,31 +43,27 @@ class UtplsqlDAOSpec extends Specification {
         dao.getPackageStatus('') == 'NO PACKAGE FOUND'
     }
 
-    def "given spec: true and body: true return true"(){
+    def "recompile a valid package does not throw exception"(){
         given:
-        1 * sql.execute(_) >> true
-        1 * sql.execute(_) >> true
+        sql.rows(_) >> [[STATUS:'VALID']]
+        dao.getPackageStatus(_) >> 'VALID'
+        
+        when:
+        dao.recompilePackage('UT_BETWNSTR')
 
-        expect:
-        dao.recompilePackage('UT_BETWNSTR') == true
+        then:
+        notThrown UtplsqlDAOException
     }
 
-    @Unroll
-    def "given spec: #spec and body: #body throw exception"(){
+    def "recompile a broken package throws exception"(){
         given:
-        1 * sql.execute(_) >> spec
-        1 * sql.execute(_) >> body
+        sql.rows(_) >> [[STATUS:'INVALID']]
+        dao.getPackageStatus(_) >> 'INVALID'
 
         when:
         dao.recompilePackage('UT_BETWNSTR')
 
         then:
         thrown UtplsqlDAOException
-
-        where:
-        spec    | body
-        true    | false
-        false   | true
-        false   | false
     }
 }
