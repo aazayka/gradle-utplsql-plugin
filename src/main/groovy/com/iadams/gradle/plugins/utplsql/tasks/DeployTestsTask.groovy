@@ -1,6 +1,8 @@
 package com.iadams.gradle.plugins.utplsql.tasks
 
 import com.iadams.gradle.plugins.utplsql.UtplsqlPlugin
+import com.iadams.gradle.plugins.utplsql.core.UtplsqlDAO
+import com.iadams.gradle.plugins.utplsql.core.UtplsqlDAOException
 import groovy.sql.Sql
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
@@ -87,10 +89,19 @@ class DeployTestsTask extends DefaultTask {
             }
 
             def sql = Sql.newInstance(getUrl() ,getUsername() ,getPassword() ,getDriver())
+            def dao = new UtplsqlDAO(sql)
 
             packages.each{
                 logger.info "Deploying: $it.name"
                 sql.execute( it.text[0..it.text.lastIndexOf(';')] )
+            }
+
+            packages = packages.collect { project.file(it).name.replaceFirst(~/\.[^\.]+$/, '') }
+            packages = packages.unique { a, b -> a <=> b }
+
+            packages.each{
+                logger.debug "Recompiling $it"
+                dao.recompilePackage(it)
             }
         }
         catch (ClassNotFoundException e) {
@@ -98,6 +109,9 @@ class DeployTestsTask extends DefaultTask {
         }
         catch (SQLException e) {
             throw new GradleException("Error communicating with the database", e)
+        }
+        catch (UtplsqlDAOException e) {
+            throw new GradleException(e.message)
         }
     }
 }

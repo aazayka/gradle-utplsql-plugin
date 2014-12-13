@@ -57,4 +57,27 @@ class UtplsqlDAO {
             return result
         }
     }
+
+    /**
+     * @param packageName
+     *
+     * @return
+     * @throws SQLException
+     */
+    def recompilePackage(String packageName) throws UtplsqlDAOException
+    {
+        try {
+            def compile1 = sql.execute("ALTER PACKAGE ${Sql.expand(packageName.toString().toUpperCase())} COMPILE")
+            def compile2 = sql.execute("ALTER PACKAGE ${Sql.expand(packageName.toString().toUpperCase())} COMPILE BODY")
+
+            if (compile1 && compile2) {
+                return true
+            } else {
+                throw new UtplsqlDAOException("The package $packageName failed to compile.")
+            }
+        }
+        catch(SQLException e){
+            throw new UtplsqlDAOException("Error communicating with the database.", e)
+        }
+    }
 }
