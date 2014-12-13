@@ -105,4 +105,37 @@ class DeployTestsIntegDbSpec extends IntegrationSpec {
             result.standardOutput.contains('Deploying: ut_simple_example.pks')
             result.standardOutput.contains('Deploying: ut_simple_example.pkb')
     }
+
+    def "deploy a package that doesnt compile results in failure"() {
+        setup:
+        directory('tests')
+        copyResources('src/broken/plsql','tests')
+
+        useToolingApi = false
+        buildFile << '''
+                        apply plugin: 'com.iadams.utplsql'
+
+                        repositories {
+                            mavenLocal()
+                        }
+                        dependencies {
+                            driver "com.oracle:ojdbc6:11.2.0.1.0"
+                        }
+
+                        utplsql {
+                            url = "jdbc:oracle:thin:@localhost:1521:test"
+                            username = "testing"
+                            password = "testing"
+                            sourceDir = "${projectDir}/tests"
+                        }
+                        '''.stripIndent()
+
+        when:
+        ExecutionResult result = runTasksWithFailure('deployUtplsqlTests')
+
+        then:
+        result.standardOutput.contains('Deploying: ut_broken.pks')
+        result.standardOutput.contains('Deploying: ut_broken.pkb')
+        result.getFailure().message == "The package UT_BROKEN failed to compile."
+    }
 }
