@@ -3,6 +3,7 @@ package com.iadams.gradle.plugins.utplsql.core
 import groovy.sql.Sql
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import spock.lang.Ignore
 import spock.lang.Specification
 
 import java.sql.SQLException
@@ -17,30 +18,33 @@ class UtplsqlRunnerSpec extends Specification {
     Sql sql = Mock(Sql)
     ReportGenerator reportGen = Mock(ReportGenerator)
     PackageTestResults pkgResults = Mock(PackageTestResults)
+    UtplsqlDAO dao = Mock(UtplsqlDAO)
 
     def setup(){
         Logger slf4jLogger = LoggerFactory.getLogger('logger')
-        runner = new UtplsqlRunner(mockfile, slf4jLogger)
+        runner = new UtplsqlRunner(mockfile, slf4jLogger, sql)
         runner.reportGen = reportGen
-        runner.sql = sql
+        runner.dao = dao
     }
 
     def "test a package"(){
         given:
-            sql.call(_,_) >> {1}
-            reportGen.generateReport(_, _) >> pkgResults
-            pkgResults.toXML(_, _) >> '<pretend xml>'
+        dao.getPackageStatus(_) >> 'VALID'
+        dao.runUtplsqlProcedure(_,_,_) >> 1
+        reportGen.generateReport(_, _) >> pkgResults
+        pkgResults.toXML(_, _) >> '<pretend xml>'
 
         when:
-            def result = runner.runPackage('betwnstr', 'test', true)
+        def result = runner.runPackage('betwnstr', 'test', true)
 
         then:
-            result == "<pretend xml>"
+        result == "<pretend xml>"
     }
 
     def "run package's tests"(){
         given:
-        sql.call(_,_) >> {1}
+        dao.getPackageStatus(_) >> 'VALID'
+        dao.runUtplsqlProcedure(_,_,_) >> 1
         reportGen.generateReport(_, _) >> pkgResults
         pkgResults.toXML(_, _) >> '<pretend xml>'
 
@@ -53,12 +57,23 @@ class UtplsqlRunnerSpec extends Specification {
 
     def "test a package with a broken sql connection"(){
         given:
-            sql.call(_,_) >> { throw new SQLException("Unable to connect to the DB!") }
+        dao.getPackageStatus(_) >> 'VALID'
+        dao.runUtplsqlProcedure(_,_,_) >> { throw new SQLException("Unable to connect to the DB!") }
 
         when:
-            runner.runPackage('betwnstr', 'test', true)
+        runner.runPackage('betwnstr', 'test', true)
 
         then:
-            thrown(UtplsqlRunnerException)
+        thrown(UtplsqlRunnerException)
+    }
+
+    def "generate a error report"() {
+        given:
+        dao.getPackageStatus(_) >> 'INVALID'
+        reportGen.generateErrorReport() >> pkgResults
+        pkgResults.toXML(_, _) >> '<pretend error xml>'
+
+        expect:
+        runner.runPackage('ut_betwnstr', 'test', true) == '<pretend error xml>'
     }
 }

@@ -28,6 +28,12 @@ class TestXmlFixtures {
             </testsuite>
     """
 
+    protected static final String SINGLE_ERROR_XML_RESULTS = """<testsuite name="UT_CHEESE" tests="1" failures="0" skipped="0" errors="1" time="0.145">
+               <testcase name="" classname="" time="0">
+                 <error type="INVALID">Warning: Object altered with compilation errors.</error>
+               </testcase>
+             </testsuite>"""
+
     protected static final String DOUBLE_BETWNSTR_XML_RESULTS = """
             <testsuite name="UT_BETWNSTR" tests="2" failures="0" skipped="0" errors="0" time="0.123">
               <testcase name="null end" classname="BETWNSTR.UT_BETWNSTR" time="0" />

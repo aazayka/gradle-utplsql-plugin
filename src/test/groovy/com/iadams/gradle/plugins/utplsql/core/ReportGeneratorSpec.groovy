@@ -39,4 +39,12 @@ class ReportGeneratorSpec extends Specification {
         then:
         new Diff( TestXmlFixtures.SINGLE_FAILURE_XML_RESULTS, result).similar()
     }
+
+    def "generate a error report"() {
+        when:
+        def result = generator.generateErrorReport().toXML('UT_CHEESE',0.145)
+
+        then:
+        new Diff( TestXmlFixtures.SINGLE_ERROR_XML_RESULTS, result).similar()
+    }
 }

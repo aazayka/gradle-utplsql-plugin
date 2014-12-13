@@ -19,44 +19,53 @@ class UtplsqlRunner {
     ReportGenerator reportGen
     Sql sql
     PackageTestResults results
+    UtplsqlDAO dao
 
-    UtplsqlRunner(File outputDir, org.slf4j.Logger logger)
+    UtplsqlRunner(File outputDir, org.slf4j.Logger logger, Sql conn)
     {
         outputDir.mkdirs()
         this.outputDir = outputDir
         this.logger = logger
+        this.sql = conn
+        this.dao = new UtplsqlDAO(sql)
+        this.reportGen = new ReportGenerator()
     }
 
     /**
      * Run the utPLSQL tests in a single package. This method calls the relevant utPLSQL schema stored procedure and obtains the results, exporting
      * them in a Maven Surefire report.
      *
-     * @param sql
      * @param packageName
      * @param testMethod
      * @param setupMethod
      * @return
      * @throws SQLException
      */
-    def runPackage(String packageName, String testMethod, boolean setupMethod) throws SQLException, IOException
+    def runPackage(String packageName, String testMethod, boolean setupMethod) throws UtplsqlRunnerException
     {
         try {
-            def start = new Date()
+            def packageStatus = dao.getPackageStatus(packageName)
+            switch(packageStatus){
+                case 'INVALID':
+                    results = reportGen.generateErrorReport()
+                    return results.toXML(packageName, 0)
 
-            def setup = testMethod.equals('test') ? ' recompile_in => FALSE,' : ''
+                case 'VALID':
+                    def start = new Date()
 
-            def runId
+                    def runId = dao.runUtplsqlProcedure(packageName,testMethod,setupMethod)
 
-            sql.call("{call utplsql.${Sql.expand(testMethod)}('${Sql.expand(packageName)}', ${Sql.expand(setup)} per_method_setup_in => ${Sql.expand(setupMethod.toString())}); $Sql.VARCHAR := utplsql2.runnum}"){ result->
-                runId = result
+                    def stop = new Date()
+                    TimeDuration td = TimeCategory.minus(stop, start)
+
+                    results = reportGen.generateReport(sql, runId)
+
+                    return results.toXML(packageName, "${td.seconds}.${td.millis}".toFloat())
+
+                case 'NO PACKAGE FOUND':
+                    results = new PackageTestResults()
+                    return results.toXML(packageName, 0)
             }
-
-            def stop = new Date()
-            TimeDuration td = TimeCategory.minus( stop, start )
-
-            results = reportGen.generateReport(sql, runId )
-
-            return results.toXML(packageName, "${td.seconds}.${td.millis}".toFloat())
         }
         catch (SQLException e) {
             throw new UtplsqlRunnerException("Database communication error.", e)

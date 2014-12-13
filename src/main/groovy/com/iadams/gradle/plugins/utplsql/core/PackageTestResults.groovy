@@ -10,13 +10,14 @@ class PackageTestResults {
     def descriptions = []
     def getTestsRun() { descriptions.size() }
     def getTestFailures() { descriptions.count { it.failure } }
+    def getTestErrors() { descriptions.count { it.error }}
 
     String toXML(String name, def duration){
         def writer = new StringWriter()
         def xml = new MarkupBuilder(writer)
         xml.setDoubleQuotes(true)
 
-        xml.testsuite(name: name, tests: getTestsRun(), failures: getTestFailures(), skipped: '0', errors: '0', time: duration){
+        xml.testsuite(name: name, tests: getTestsRun(), failures: getTestFailures(), skipped: '0', errors: getTestErrors(), time: duration){
             descriptions.each{ it.toXML(xml) }
         }
 

@@ -14,10 +14,12 @@ class TestDescription {
     def results
     def duration = 0
     def failure = false
+    def error = false
 
     def toXML(MarkupBuilder xml){
         xml.testcase(name: testName, classname: procedureName, time: '0' ){
             if(failure){ xml.failure(type: type, results) }
+            if(error){ xml.error(type: type, results) }
         }
     }
 }

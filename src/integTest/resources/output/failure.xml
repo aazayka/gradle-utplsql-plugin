@@ -1,0 +1,3 @@
+<testcase name="UT_CHEESE" classname="UT_CHEESE" time="0.145">
+  <failure message="Packaged failed to compile." type="ORA-12345"></failure>
+</testcase>

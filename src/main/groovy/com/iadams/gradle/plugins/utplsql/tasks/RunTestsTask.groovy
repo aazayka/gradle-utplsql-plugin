@@ -103,14 +103,6 @@ class RunTestsTask extends DefaultTask {
      */
     @TaskAction
     void runUtplsqlTests() throws GradleException {
-        logger.info "URL: ${getUrl()}"
-        logger.info "Username: ${getUsername()}"
-        logger.info "Driver: ${getDriver()}"
-        logger.info "SourceDir: ${project.file(getSourceDir())}"
-        logger.info "Packages: ${getPackages()}"
-        logger.info "TestMethod: ${getTestMethod()}"
-        logger.info "SetupMethod: ${getSetupMethod()}"
-        logger.info "OutputDir: ${getOutputDir()}"
 
         def extension = project.extensions.findByName(UtplsqlPlugin.UTPLSQL_EXTENSION)
 
@@ -120,6 +112,15 @@ class RunTestsTask extends DefaultTask {
             packages = files.unique { a, b -> a <=> b }
         }
 
+        logger.info "URL: ${getUrl()}"
+        logger.info "Username: ${getUsername()}"
+        logger.info "Driver: ${getDriver()}"
+        logger.info "SourceDir: ${project.file(getSourceDir())}"
+        logger.info "Packages: ${getPackages()}"
+        logger.info "TestMethod: ${getTestMethod()}"
+        logger.info "SetupMethod: ${getSetupMethod()}"
+        logger.info "OutputDir: ${getOutputDir()}"
+
         try {
             //TODO extract the base configuration for the oracle driver into an abstract task.
             project.configurations.driver.each {File file ->
@@ -128,9 +129,7 @@ class RunTestsTask extends DefaultTask {
 
             def sql = Sql.newInstance(getUrl() ,getUsername() ,getPassword() ,getDriver())
 
-            UtplsqlRunner runner = new UtplsqlRunner(getOutputDir(), logger)
-            runner.reportGen = new ReportGenerator()
-            runner.sql = sql
+            UtplsqlRunner runner = new UtplsqlRunner(getOutputDir(), logger, sql)
 
             def failedTests = false
             def totalTests = 0
@@ -139,9 +138,9 @@ class RunTestsTask extends DefaultTask {
                 new File("${runner.outputDir}/TEST-${it}.xml").write(runner.runPackage( it, getTestMethod(), getSetupMethod()))
                 totalTests += runner.results.getTestsRun()
 
-                if(runner.results.getTestFailures()){
+                if(runner.results.getTestFailures() || runner.results.getTestErrors()){
                     failedTests = true
-                    logger.error "Package $it contains ${runner.results.getTestFailures()} failing tests."
+                    logger.error "Package $it contains ${runner.results.getTestFailures()} failing tests and ${runner.results.getTestErrors()} errored tests."
                 }
             }
 

@@ -11,7 +11,8 @@ class ReportGenerator {
      *
      * @param sql
      * @param runId
-     * @return
+     *
+     *  @return PackageTestResults The test results for the package.
      */
     PackageTestResults generateReport(Sql sql, def runId) {
 
@@ -22,6 +23,25 @@ class ReportGenerator {
             if(row.status == "FAILURE") { desc.failure = true }
             results.descriptions.add(desc)
         }
+
+        return results
+    }
+
+    /**
+     * Generates an XML junit style error report for a package that is invalid.
+     *
+     *  @return PackageTestResults The test results for the package.
+     */
+    PackageTestResults generateErrorReport(){
+        def results = new PackageTestResults()
+        TestDescription desc = new TestDescription()
+
+        desc.procedureName = ''
+        desc.testName = ''
+        desc.error = true
+        desc.results = 'Warning: Object altered with compilation errors.'
+        desc.type = 'INVALID'
+        results.descriptions.add(desc)
 
         return results
     }
