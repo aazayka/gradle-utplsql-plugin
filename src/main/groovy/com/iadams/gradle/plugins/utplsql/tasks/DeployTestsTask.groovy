@@ -84,7 +84,7 @@ class DeployTestsTask extends DefaultTask {
         logger.info "[INFO] Packages: ${packages}"
 
         try {
-            project.configurations.driver.each {File file ->
+            project.buildscript.configurations.classpath.each {File file ->
                 project.gradle.class.classLoader.addURL(file.toURL())
             }
 
