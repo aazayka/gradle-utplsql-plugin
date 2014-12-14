@@ -81,20 +81,6 @@ class UtplsqlPlugin implements Plugin<Project> {
             reportsDir = project.file("${project.buildDir}/reports/utplsql")
         }
 
-        //TODO Ensure we can generate HTML reports
-        /*project.task( "UtplsqlReport") {
-            group = 'utplsql'
-
-            ant.taskdef(name: 'junitreport',
-                        classname: 'org.apache.tools.ant.taskdefs.optional.junit.XMLResultAggregator',
-                        classpath: project.configurations.runtime.asPath
-            )
-            ant.junitreport(todir: "${project.buildDir}/reports") {
-                fileset(dir: "${project.buildDir}/utplsql", includes: 'TEST-*.xml')
-                report(todir: "${project.buildDir}/reports/utplsql", format: "frames")
-            }
-        }*/
-
         project.getTasks().addRule(new ExecuteTestRule(project))
         project.getTasks().addRule(new DeployTestRule(project))
     }
