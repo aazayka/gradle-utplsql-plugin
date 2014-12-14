@@ -1,6 +1,7 @@
 package com.iadams.gradle.plugins.utplsql
 
 import com.iadams.gradle.plugins.utplsql.extensions.UtplsqlPluginExtension
+import com.iadams.gradle.plugins.utplsql.tasks.HtmlReportTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.BasePlugin
@@ -15,6 +16,7 @@ import com.iadams.gradle.plugins.utplsql.tasks.rules.DeployTestRule
 class UtplsqlPlugin implements Plugin<Project> {
     static final UTPLSQL_RUN_TESTS_TASK = 'runUtplsqlTests'
     static final UTPLSQL_DEPLOY_TESTS_TASK = 'deployUtplsqlTests'
+    static final UTPLSQL_TEST_REPORTS_TASK = 'utplsqlReports'
     static final UTPLSQL_EXTENSION = 'utplsql'
 
     /**
@@ -70,6 +72,13 @@ class UtplsqlPlugin implements Plugin<Project> {
         project.task( UTPLSQL_RUN_TESTS_TASK , type: RunTestsTask) {
             description = 'Executes all utPLSQL tests.'
             group = 'utplsql'
+        }
+
+        project.task( UTPLSQL_TEST_REPORTS_TASK, type: HtmlReportTask) {
+            description = 'Generates HTML reports from the XML results.'
+            group = 'utplsql'
+            resultsDir = project.file(extension.outputDir)
+            reportsDir = project.file("${project.buildDir}/reports/utplsql")
         }
 
         //TODO Ensure we can generate HTML reports

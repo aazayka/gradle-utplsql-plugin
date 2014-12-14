@@ -1,3 +1,5 @@
-<testcase name="UT_CHEESE" classname="UT_CHEESE" time="0.145">
-  <failure message="Packaged failed to compile." type="ORA-12345"></failure>
-</testcase>
+<testsuite name="UT_BETWNSTR" tests="1" failures="1" skipped="0" errors="0" time="0.123">
+  <testcase name="normal" classname="BETWNSTR.UT_BETWNSTR" time="0">
+    <failure type="EQ">Expected "cde" and got "dde"</failure>
+  </testcase>
+</testsuite>
