@@ -9,7 +9,7 @@ import org.gradle.api.Project
  */
 class ExecuteTestRule implements Rule {
 
-    static final String PREFIX = "executeTest"
+    static final String PREFIX = "utRun-"
     Project project
 
     ExecuteTestRule(Project project) {

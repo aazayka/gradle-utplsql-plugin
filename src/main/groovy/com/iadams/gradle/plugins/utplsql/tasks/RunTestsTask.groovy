@@ -138,9 +138,12 @@ class RunTestsTask extends DefaultTask {
                 new File("${runner.outputDir}/TEST-${it}.xml").write(runner.runPackage( it, getTestMethod(), getSetupMethod()))
                 totalTests += runner.results.getTestsRun()
 
+                logger.info "[INFO] Tests Run: ${runner.results.getTestsRun()}"
+                logger.info "[INFO] Failures: ${runner.results.getTestFailures()}"
+                logger.info "[INFO] Errors: ${runner.results.getTestErrors()}"
+
                 if(runner.results.getTestFailures() || runner.results.getTestErrors()){
                     failedTests = true
-                    logger.error "Package $it contains ${runner.results.getTestFailures()} failing tests and ${runner.results.getTestErrors()} errored tests."
                 }
             }
 
@@ -149,7 +152,7 @@ class RunTestsTask extends DefaultTask {
             }
 
             if(failedTests){
-                throw new GradleException("Failing unit tests.")
+                throw new GradleException("Failing unit tests.\nTests: ${runner.testsRun} \nFailures: ${runner.testsFailed} \nErrors: ${runner.testsErrors}")
             }
         }
         catch (ClassNotFoundException e) {

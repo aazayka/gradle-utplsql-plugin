@@ -34,7 +34,7 @@ class DeployTestsIntegDbSpec extends IntegrationSpec {
                         '''.stripIndent()
 
         when:
-            ExecutionResult result = runTasksSuccessfully('deployTestbetwnstr')
+            ExecutionResult result = runTasksSuccessfully('utDeploy-betwnstr')
 
         then:
             result.standardOutput.contains('Deploying: ut_betwnstr.pks')
@@ -67,7 +67,7 @@ class DeployTestsIntegDbSpec extends IntegrationSpec {
                         '''.stripIndent()
 
         when:
-            ExecutionResult result = runTasksSuccessfully('deployUtplsqlTests')
+            ExecutionResult result = runTasksSuccessfully(UtplsqlPlugin.UTPLSQL_DEPLOY_TESTS_TASK)
 
         then:
             result.standardOutput.contains('Deploying: ut_betwnstr.pks')
@@ -103,7 +103,7 @@ class DeployTestsIntegDbSpec extends IntegrationSpec {
                         '''.stripIndent()
 
         when:
-            ExecutionResult result = runTasksSuccessfully('deployUtplsqlTests')
+            ExecutionResult result = runTasksSuccessfully(UtplsqlPlugin.UTPLSQL_DEPLOY_TESTS_TASK)
 
         then:
             result.standardOutput.contains('Deploying: ut_betwnstr.pks')
@@ -139,7 +139,7 @@ class DeployTestsIntegDbSpec extends IntegrationSpec {
                         '''.stripIndent()
 
         when:
-        ExecutionResult result = runTasksWithFailure('deployUtplsqlTests')
+        ExecutionResult result = runTasksWithFailure(UtplsqlPlugin.UTPLSQL_DEPLOY_TESTS_TASK)
 
         then:
         result.standardOutput.contains('Deploying: ut_broken.pks')

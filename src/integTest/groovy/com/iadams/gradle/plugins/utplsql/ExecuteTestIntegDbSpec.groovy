@@ -37,7 +37,7 @@ class ExecuteTestIntegDbSpec extends IntegrationSpec {
                         '''.stripIndent()
 
         when:
-            runTasksSuccessfully('executeTestBetwnstr')
+            runTasksSuccessfully('utRun-Betwnstr')
 
         then:
             fileExists("build/utplsql/TEST-Betwnstr.xml")
@@ -67,7 +67,7 @@ class ExecuteTestIntegDbSpec extends IntegrationSpec {
                         '''.stripIndent()
 
         when:
-            ExecutionResult result = runTasksWithFailure('executeTestcheese')
+            ExecutionResult result = runTasksWithFailure('utRun-cheese')
 
         then:
             result.getFailure().cause.cause.message == "No tests were run."
@@ -97,7 +97,7 @@ class ExecuteTestIntegDbSpec extends IntegrationSpec {
                         '''.stripIndent()
 
         when:
-            runTasksSuccessfully('runUtplsqlTests')
+            runTasksSuccessfully(UtplsqlPlugin.UTPLSQL_RUN_TESTS_TASK)
 
         then:
             fileExists("build/utplsql/TEST-ut_betwnstr.xml")

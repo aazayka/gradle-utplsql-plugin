@@ -33,6 +33,9 @@ class UtplsqlRunnerSpec extends Specification {
         dao.runUtplsqlProcedure(_,_,_) >> 1
         reportGen.generateReport(_, _) >> pkgResults
         pkgResults.toXML(_, _) >> '<pretend xml>'
+        pkgResults.testsRun >> 4
+        pkgResults.testErrors >> 0
+        pkgResults.testFailures >> 0
 
         when:
         def result = runner.runPackage('betwnstr', 'test', true)
@@ -47,6 +50,9 @@ class UtplsqlRunnerSpec extends Specification {
         dao.runUtplsqlProcedure(_,_,_) >> 1
         reportGen.generateReport(_, _) >> pkgResults
         pkgResults.toXML(_, _) >> '<pretend xml>'
+        pkgResults.testsRun >> 4
+        pkgResults.testErrors >> 0
+        pkgResults.testFailures >> 0
 
         when:
         def result = runner.runPackage('betwnstr', 'run', false)

@@ -14,9 +14,10 @@ import com.iadams.gradle.plugins.utplsql.tasks.rules.DeployTestRule
  * Created by Iain Adams on 02/09/2014.
  */
 class UtplsqlPlugin implements Plugin<Project> {
-    static final UTPLSQL_RUN_TESTS_TASK = 'runUtplsqlTests'
-    static final UTPLSQL_DEPLOY_TESTS_TASK = 'deployUtplsqlTests'
-    static final UTPLSQL_TEST_REPORTS_TASK = 'utplsqlReports'
+    static final UTPLSQL_RUN_TESTS_TASK = 'utRun'
+    static final UTPLSQL_DEPLOY_TESTS_TASK = 'utDeploy'
+    static final UTPLSQL_TEST_REPORTS_TASK = 'utReport'
+    static final UTPLSQL_ALL_TASK = 'utplsql'
     static final UTPLSQL_EXTENSION = 'utplsql'
 
     /**
@@ -79,6 +80,16 @@ class UtplsqlPlugin implements Plugin<Project> {
             group = 'utplsql'
             resultsDir = project.file(extension.outputDir)
             reportsDir = project.file("${project.buildDir}/reports/utplsql")
+        }
+
+        project.task( UTPLSQL_ALL_TASK, dependsOn: [UTPLSQL_DEPLOY_TESTS_TASK, UTPLSQL_RUN_TESTS_TASK]) {
+            description = 'Deploy, Run, Report'
+            group = 'utplsql'
+        }
+        project.getTasks().getByName(UTPLSQL_RUN_TESTS_TASK).mustRunAfter project.getTasks().getByName(UTPLSQL_DEPLOY_TESTS_TASK)
+        //project.getTasks().getByName(UTPLSQL_RUN_TESTS_TASK).finalizedBy project.getTasks().getByName(UTPLSQL_TEST_REPORTS_TASK)
+        project.tasks.withType(RunTestsTask){
+            finalizedBy = [UTPLSQL_TEST_REPORTS_TASK]
         }
 
         project.getTasks().addRule(new ExecuteTestRule(project))

@@ -9,7 +9,7 @@ import org.gradle.api.Rule
  */
 class DeployTestRule implements Rule {
 
-    static final String PREFIX = "deployTest"
+    static final String PREFIX = "utDeploy-"
     Project project
 
     DeployTestRule(Project project) {

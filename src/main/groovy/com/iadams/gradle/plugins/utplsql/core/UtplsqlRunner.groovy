@@ -21,6 +21,10 @@ class UtplsqlRunner {
     PackageTestResults results
     UtplsqlDAO dao
 
+    def testsRun = 0
+    def testsFailed = 0
+    def testsErrors = 0
+
     UtplsqlRunner(File outputDir, org.slf4j.Logger logger, Sql conn)
     {
         outputDir.mkdirs()
@@ -60,6 +64,10 @@ class UtplsqlRunner {
                     TimeDuration td = TimeCategory.minus(stop, start)
 
                     results = reportGen.generateReport(sql, runId)
+
+                    testsRun += results.testsRun
+                    testsFailed += results.testFailures
+                    testsErrors += results.testErrors
 
                     return results.toXML(packageName, "${td.seconds}.${td.millis}".toFloat())
 

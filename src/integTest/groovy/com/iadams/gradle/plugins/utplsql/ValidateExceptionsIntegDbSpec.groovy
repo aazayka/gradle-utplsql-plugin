@@ -20,7 +20,7 @@ class ValidateExceptionsIntegDbSpec extends IntegrationSpec {
                         '''.stripIndent()
 
         when:
-            ExecutionResult result = runTasksWithFailure('executeTestcheese')
+            ExecutionResult result = runTasksWithFailure('utRun-cheese')
 
         then:
             result.getFailure().cause.cause.message == "JDBC Driver class not found."
@@ -40,7 +40,7 @@ class ValidateExceptionsIntegDbSpec extends IntegrationSpec {
                         '''.stripIndent()
 
         when:
-            ExecutionResult result = runTasksWithFailure('executeTestcheese')
+            ExecutionResult result = runTasksWithFailure('utRun-cheese')
 
         then:
             result.getFailure().cause.cause.message == "Error communicating with the database."

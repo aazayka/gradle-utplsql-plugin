@@ -18,7 +18,7 @@ class HtmlReportIntegSpec extends IntegrationSpec {
 
 
         when:
-            runTasksSuccessfully('utplsqlReports')
+            runTasksSuccessfully(UtplsqlPlugin.UTPLSQL_TEST_REPORTS_TASK)
 
         then:
             fileExists('build/reports/utplsql/0_UT_BETWNSTR.html')
@@ -34,7 +34,7 @@ class HtmlReportIntegSpec extends IntegrationSpec {
 
 
         when:
-        runTasksSuccessfully('utplsqlReports')
+        runTasksSuccessfully(UtplsqlPlugin.UTPLSQL_TEST_REPORTS_TASK)
 
         then:
         fileExists('build/reports/utplsql/0_UT_BETWNSTR.html')
@@ -50,7 +50,7 @@ class HtmlReportIntegSpec extends IntegrationSpec {
 
 
         when:
-        runTasksSuccessfully('utplsqlReports')
+        runTasksSuccessfully(UtplsqlPlugin.UTPLSQL_TEST_REPORTS_TASK)
 
         then:
         fileExists('build/reports/utplsql/0_UT_CHEESE.html')

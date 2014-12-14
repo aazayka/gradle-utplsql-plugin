@@ -1,5 +1,6 @@
 package com.iadams.gradle.plugins.utplsql.subprojects
 
+import com.iadams.gradle.plugins.utplsql.UtplsqlPlugin
 import nebula.test.IntegrationSpec
 import nebula.test.functional.ExecutionResult
 
@@ -24,7 +25,7 @@ class SubProjectDeployTestsIntegDbSpec extends IntegrationSpec {
             useToolingApi = false
 
         when:
-            ExecutionResult result = runTasksSuccessfully('schemaOne:deployTestbetwnstr')
+            ExecutionResult result = runTasksSuccessfully('schemaOne:utDeploy-betwnstr')
 
         then:
             result.standardOutput.contains('Deploying: ut_betwnstr.pks')
@@ -43,7 +44,7 @@ class SubProjectDeployTestsIntegDbSpec extends IntegrationSpec {
             useToolingApi = false
 
         when:
-            ExecutionResult result = runTasksSuccessfully('deployUtplsqlTests')
+            ExecutionResult result = runTasksSuccessfully(UtplsqlPlugin.UTPLSQL_DEPLOY_TESTS_TASK)
 
         then:
             result.standardOutput.contains('Deploying: ut_betwnstr.pks')
@@ -66,7 +67,7 @@ class SubProjectDeployTestsIntegDbSpec extends IntegrationSpec {
             useToolingApi = false
 
         when:
-            ExecutionResult result = runTasksSuccessfully('deployUtplsqlTests')
+            ExecutionResult result = runTasksSuccessfully(UtplsqlPlugin.UTPLSQL_DEPLOY_TESTS_TASK)
 
         then:
             result.standardOutput.contains('Deploying: ut_betwnstr.pks')

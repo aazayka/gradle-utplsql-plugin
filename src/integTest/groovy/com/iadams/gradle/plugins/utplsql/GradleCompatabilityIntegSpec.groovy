@@ -24,7 +24,9 @@ class GradleCompatabilityIntegSpec extends IntegrationSpec {
             ExecutionResult result = runTasksSuccessfully('tasks')
 
         then:
-            result.standardOutput.contains('runUtplsqlTests - Executes all utPLSQL tests.')
+            result.standardOutput.contains(UtplsqlPlugin.UTPLSQL_RUN_TESTS_TASK)
+            result.standardOutput.contains(UtplsqlPlugin.UTPLSQL_TEST_REPORTS_TASK)
+            result.standardOutput.contains(UtplsqlPlugin.UTPLSQL_DEPLOY_TESTS_TASK)
 
         where:
             requestedGradleVersion << ['1.6','1.7','1.8','1.9','1.10','1.11','1.12','2.0','2.1','2.2']
