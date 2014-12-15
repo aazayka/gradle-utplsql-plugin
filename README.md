@@ -5,7 +5,7 @@ This is a gradle plugin for the [utplsql] tool.
 
 Latest Version
 --------------
--N/A
+[ ![Download](https://api.bintray.com/packages/iwarapter/gradle-plugins/gradle-utplsql-plugin/images/download.svg) ](https://bintray.com/iwarapter/gradle-plugins/gradle-utplsql-plugin/_latestVersion)
 
 
 Build Status
