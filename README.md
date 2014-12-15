@@ -19,8 +19,8 @@ To apply the plugin:
 ```
 buildscript {
   repositories {
+    maven { url 'http://dl.bintray.com/iwarapter/gradle-plugins/' }
     mavenLocal()
-    mavenCentral()
   }
   dependencies {
     classpath 'com.oracle:ojdbc6:11.2.0.1.0' //<-- Add your jdbc driver
