@@ -59,7 +59,6 @@ class UtplsqlPluginExtension {
     * In the event of no tests being run, fail the build.
     */
     Boolean failOnNoTests = true
-    Boolean outputFailuresToConsole
 
     UtplsqlPluginExtension( Project project) {
         sourceDir = "${project.projectDir}/src/test/plsql"
