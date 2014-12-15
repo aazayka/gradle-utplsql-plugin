@@ -59,14 +59,6 @@ class DeployTestsTask extends DefaultTask {
     @Optional
     Boolean failOnNoTests
 
-    /**
-     * If errors occur the failure message can be written to the console.
-     *
-     */
-    @Input
-    @Optional
-    Boolean outputFailuresToConsole
-
     @TaskAction
     void deployUtplsqlTests() {
 

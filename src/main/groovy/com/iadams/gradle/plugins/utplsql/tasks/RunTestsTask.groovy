@@ -90,14 +90,6 @@ class RunTestsTask extends DefaultTask {
     Boolean failOnNoTests
 
     /**
-     * If errors occur the failure message can be written to the console.
-     *
-     */
-    @Input
-    @Optional
-    Boolean outputFailuresToConsole
-
-    /**
      *
      * @throws GradleException
      */

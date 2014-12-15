@@ -32,15 +32,44 @@ class ExecuteTestIntegDbSpec extends IntegrationSpec {
                             url = "jdbc:oracle:thin:@localhost:1521:test"
                             username = "testing"
                             password = "testing"
-                            testMethod = "test"
                         }
                         '''.stripIndent()
 
         when:
-            runTasksSuccessfully('utRun-Betwnstr')
+            runTasksSuccessfully('utRun-ut_betwnstr')
 
         then:
-            fileExists("build/utplsql/TEST-Betwnstr.xml")
+            fileExists("build/utplsql/TEST-ut_betwnstr.xml")
+    }
+
+    def "use the rule to test an object"() {
+        setup:
+        useToolingApi = false
+        buildFile << '''
+                        apply plugin: 'com.iadams.utplsql'
+
+                        buildscript {
+                            repositories {
+                                mavenLocal()
+                            }
+                            dependencies {
+                                classpath "com.oracle:ojdbc6:11.2.0.1.0"
+                            }
+                        }
+
+                        utplsql {
+                            url = "jdbc:oracle:thin:@localhost:1521:test"
+                            username = "testing"
+                            password = "testing"
+                        }
+                        '''.stripIndent()
+
+        when:
+        runTasksSuccessfully('utTest-betwnstr')
+
+        then:
+        fileExists("build/utplsql/TEST-betwnstr.xml")
+
     }
 
     def "rule fails when executing a test that doesn't exist"() {
@@ -62,12 +91,11 @@ class ExecuteTestIntegDbSpec extends IntegrationSpec {
                             url = "jdbc:oracle:thin:@localhost:1521:test"
                             username = "testing"
                             password = "testing"
-                            testMethod = "test"
                         }
                         '''.stripIndent()
 
         when:
-            ExecutionResult result = runTasksWithFailure('utRun-cheese')
+            ExecutionResult result = runTasksWithFailure('utRun-ut_cheese')
 
         then:
             result.getFailure().cause.cause.message == "No tests were run."

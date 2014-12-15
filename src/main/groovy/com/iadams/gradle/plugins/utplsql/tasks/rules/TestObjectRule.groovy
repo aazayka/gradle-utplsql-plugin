@@ -1,23 +1,23 @@
 package com.iadams.gradle.plugins.utplsql.tasks.rules
 
 import com.iadams.gradle.plugins.utplsql.tasks.RunTestsTask
-import org.gradle.api.Rule
 import org.gradle.api.Project
+import org.gradle.api.Rule
 
 /**
  * Created by Iain Adams on 18/10/2014.
  */
-class ExecuteTestRule implements Rule {
+class TestObjectRule implements Rule {
 
-    static final String PREFIX = "utRun-"
+    static final String PREFIX = "utTest-"
     Project project
 
-    ExecuteTestRule(Project project) {
+    TestObjectRule(Project project) {
         this.project = project
     }
 
     String getDescription() {
-        String.format("Pattern: %s<TestName>: Executes a specific UTPLSQL test.", PREFIX)
+        String.format("Pattern: %s<TestName>: Executes the UTPLSQL tests for a specific object.", PREFIX)
     }
 
     @Override
@@ -36,7 +36,7 @@ class ExecuteTestRule implements Rule {
                 url = extension.url
                 username = extension.username
                 password = extension.password
-                testMethod = 'run'
+                testMethod = 'test'
                 packages = [packageName]
                 setupMethod = extension.setupMethod
                 outputDir = project.file(extension.outputDir)

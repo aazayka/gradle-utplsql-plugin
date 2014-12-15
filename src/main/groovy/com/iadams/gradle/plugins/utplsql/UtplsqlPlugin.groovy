@@ -2,6 +2,7 @@ package com.iadams.gradle.plugins.utplsql
 
 import com.iadams.gradle.plugins.utplsql.extensions.UtplsqlPluginExtension
 import com.iadams.gradle.plugins.utplsql.tasks.HtmlReportTask
+import com.iadams.gradle.plugins.utplsql.tasks.rules.TestObjectRule
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.BasePlugin
@@ -54,7 +55,6 @@ class UtplsqlPlugin implements Plugin<Project> {
             conventionMapping.setupMethod = { extension.setupMethod }
             conventionMapping.outputDir = { project.file(extension.outputDir)}
             conventionMapping.failOnNoTests = { extension.failOnNoTests }
-            conventionMapping.outputFailuresToConsole = { extension.outputFailuresToConsole }
         }
 
         project.tasks.withType( DeployTestsTask ) {
@@ -93,6 +93,7 @@ class UtplsqlPlugin implements Plugin<Project> {
         }
 
         project.getTasks().addRule(new ExecuteTestRule(project))
+        project.getTasks().addRule(new TestObjectRule(project))
         project.getTasks().addRule(new DeployTestRule(project))
     }
 }

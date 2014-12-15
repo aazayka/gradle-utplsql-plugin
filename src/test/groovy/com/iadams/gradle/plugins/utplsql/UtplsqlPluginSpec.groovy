@@ -50,7 +50,6 @@ class UtplsqlPluginSpec extends PluginProjectSpec  {
                 setupMethod = false
                 outputDir = 'build/other'
                 failOnNoTests = true
-                outputFailuresToConsole = true
             }
 
         then:
@@ -63,6 +62,5 @@ class UtplsqlPluginSpec extends PluginProjectSpec  {
             task.setupMethod == false
             task.outputDir == project.file("$projectDir/build/other")
             task.failOnNoTests == true
-            task.outputFailuresToConsole == true
     }
 }
