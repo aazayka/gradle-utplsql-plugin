@@ -105,7 +105,7 @@ class DeployTestsTask extends DefaultTask {
             }
         }
         catch (ClassNotFoundException e) {
-            throw new GradleException("JDBC Driver class not found", e);
+            throw new GradleException("JDBC Driver class not found.", e);
         }
         catch (SQLException e) {
             throw new GradleException("Error communicating with the database", e)

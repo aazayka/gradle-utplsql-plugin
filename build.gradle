@@ -39,6 +39,7 @@ task integTest(type: Test) {
     testClassesDir = sourceSets.integTest.output.classesDir
     classpath = sourceSets.integTest.runtimeClasspath
     reports.html.destination = file("$buildDir/reports/integ")
+    finalizedBy = ['jacocoTestReport', 'jacocoIntegTestReport', 'jacocoCombinedTestReport'] 
 }
 
 integTest.mustRunAfter test

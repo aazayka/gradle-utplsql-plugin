@@ -8,7 +8,7 @@ import nebula.test.functional.ExecutionResult
  */
 class ValidateExceptionsIntegDbSpec extends IntegrationSpec {
 
-    def "validate jdbc driver error handling"() {
+    def "validate jdbc driver error handling with runTestsTask"() {
         setup:
         useToolingApi = false
         buildFile << '''
@@ -21,6 +21,25 @@ class ValidateExceptionsIntegDbSpec extends IntegrationSpec {
 
         when:
             ExecutionResult result = runTasksWithFailure('utRun-cheese')
+
+        then:
+            result.getFailure().cause.cause.message == "JDBC Driver class not found."
+    }
+
+    def "validate jdbc driver error handling with deployTestsTask"() {
+        setup:
+        useToolingApi = false
+        buildFile << '''
+                        apply plugin: 'com.iadams.utplsql'
+
+                        utplsql {
+                            driver = 'org.some.dbDriver'
+                        }
+                        '''.stripIndent()
+        directory('src/test/plsql')
+
+        when:
+            ExecutionResult result = runTasksWithFailure('utDeploy-cheese')
 
         then:
             result.getFailure().cause.cause.message == "JDBC Driver class not found."

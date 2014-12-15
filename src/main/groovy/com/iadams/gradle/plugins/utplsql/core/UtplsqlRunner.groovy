@@ -80,21 +80,4 @@ class UtplsqlRunner {
             throw new UtplsqlRunnerException("Database communication error.", e)
         }
     }
-
-    /**
-     * Run the utPLSQL tests in a single package. This method calls the relevant utPLSQL schema stored procedure and obtains the results, exporting
-     * them in a Maven Surefire report.
-     *
-     * @param sql
-     * @param testSuiteName
-     * @param testMethod
-     * @param setupMethod
-     * @return
-     * @throws SQLException
-     * @throws IOException
-     */
-    PackageTestResults runTestSuite(Sql sql, String testSuiteName, String testMethod, String setupMethod) throws SQLException, IOException
-    {
-        //TODO add support for running test suites.
-    }
 }
