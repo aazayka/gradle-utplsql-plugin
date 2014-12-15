@@ -67,7 +67,7 @@ utplsql {
 * `excludes` :  Comma seperated list of files to ignore.
 * `outputDir` : The output directory for the test results.
 * `testMethod` : The type of test method to execute. Can be either test or run. Defaults to test.
-* `setupMethod` : The setup method to use. set to TRUE to execute setup and teardown for each procedure. FALSE to execute for each package. Default is FALSE.
+* `setupMethod` : The setup method to use. Set to true to execute setup and teardown for each procedure and false to execute for each package. Default is false.
 * `failOnNoTests` : In the event of no tests being run, fail the build.
 
 [utplsql]:http://utplsql.sourceforge.net/
