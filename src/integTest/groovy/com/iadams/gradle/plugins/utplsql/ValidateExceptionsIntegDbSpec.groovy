@@ -8,16 +8,26 @@ import nebula.test.functional.ExecutionResult
  */
 class ValidateExceptionsIntegDbSpec extends IntegrationSpec {
 
+    def setup(){
+        buildFile << '''apply plugin: 'com.iadams.utplsql'
+
+                        repositories {
+                            mavenCentral()
+                        }
+
+                        dependencies {
+                            junitreport 'org.apache.ant:ant-junit:1.9.4\'
+                        }
+                        '''.stripIndent()
+    }
+
     def "validate jdbc driver error handling with runTestsTask"() {
         setup:
         useToolingApi = false
         buildFile << '''
-                        apply plugin: 'com.iadams.utplsql'
-
                         utplsql {
                             driver = 'org.some.dbDriver'
-                        }
-                        '''.stripIndent()
+                        }'''.stripIndent()
 
         when:
             ExecutionResult result = runTasksWithFailure('utRun-cheese')
@@ -29,14 +39,11 @@ class ValidateExceptionsIntegDbSpec extends IntegrationSpec {
     def "validate jdbc driver error handling with deployTestsTask"() {
         setup:
         useToolingApi = false
+        directory('src/test/plsql')
         buildFile << '''
-                        apply plugin: 'com.iadams.utplsql'
-
                         utplsql {
                             driver = 'org.some.dbDriver'
-                        }
-                        '''.stripIndent()
-        directory('src/test/plsql')
+                        }'''.stripIndent()
 
         when:
             ExecutionResult result = runTasksWithFailure('utDeploy-cheese')
@@ -49,14 +56,11 @@ class ValidateExceptionsIntegDbSpec extends IntegrationSpec {
         setup:
             useToolingApi = false
             buildFile << '''
-                        apply plugin: 'com.iadams.utplsql'
-
-                        utplsql {
-                            url = 'no db here'
-                            username = 'no'
-                            password = 'chance'
-                        }
-                        '''.stripIndent()
+                            utplsql {
+                                url = 'no db here'
+                                username = 'no'
+                                password = 'chance'
+                            }'''.stripIndent()
 
         when:
             ExecutionResult result = runTasksWithFailure('utRun-cheese')

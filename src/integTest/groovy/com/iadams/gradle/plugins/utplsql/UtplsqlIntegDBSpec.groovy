@@ -11,21 +11,16 @@ class UtplsqlIntegDbSpec extends IntegrationSpec {
 
     def setup() {
         directory('src/test/plsql')
-    }
-
-    def "run utplsql with passing tests"() {
-        setup:
-        useToolingApi = false
         buildFile << '''
                     apply plugin: 'com.iadams.utplsql'
 
-                    buildscript {
-                        repositories {
-                            mavenLocal()
-                        }
-                        dependencies {
-                            classpath "com.oracle:ojdbc6:11.2.0.1.0"
-                        }
+                    repositories {
+                        mavenLocal()
+                        mavenCentral()
+                    }
+                    dependencies {
+                        driver "com.oracle:ojdbc6:11.2.0.1.0"
+                        junitreport 'org.apache.ant:ant-junit:1.9.4'
                     }
 
                     utplsql {
@@ -34,7 +29,11 @@ class UtplsqlIntegDbSpec extends IntegrationSpec {
                         password = "testing"
                     }
                     '''.stripIndent()
+    }
 
+    def "run utplsql with passing tests"() {
+        setup:
+        useToolingApi = false
         copyResources('src/test/plsql','src/test/plsql')
 
         when:
@@ -49,25 +48,6 @@ class UtplsqlIntegDbSpec extends IntegrationSpec {
     def "run utplsql with failing tests"() {
         setup:
         useToolingApi = false
-        buildFile << '''
-                    apply plugin: 'com.iadams.utplsql'
-
-                    buildscript {
-                        repositories {
-                            mavenLocal()
-                        }
-                        dependencies {
-                            classpath "com.oracle:ojdbc6:11.2.0.1.0"
-                        }
-                    }
-
-                    utplsql {
-                        url = "jdbc:oracle:thin:@localhost:1521:test"
-                        username = "testing"
-                        password = "testing"
-                    }
-                    '''.stripIndent()
-
         copyResources('src/failing/plsql','src/test/plsql')
 
         when:
@@ -84,25 +64,6 @@ class UtplsqlIntegDbSpec extends IntegrationSpec {
         setup:
         useToolingApi = false
         logLevel = LogLevel.INFO
-        buildFile << '''
-                    apply plugin: 'com.iadams.utplsql'
-
-                    buildscript {
-                        repositories {
-                            mavenLocal()
-                        }
-                        dependencies {
-                            classpath "com.oracle:ojdbc6:11.2.0.1.0"
-                        }
-                    }
-
-                    utplsql {
-                        url = "jdbc:oracle:thin:@localhost:1521:test"
-                        username = "testing"
-                        password = "testing"
-                    }
-                    '''.stripIndent()
-
         copyResources('src/test/plsql','src/test/plsql')
 
         when:

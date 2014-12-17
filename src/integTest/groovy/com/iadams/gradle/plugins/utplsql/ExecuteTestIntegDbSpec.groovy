@@ -19,13 +19,13 @@ class ExecuteTestIntegDbSpec extends IntegrationSpec {
             buildFile << '''
                         apply plugin: 'com.iadams.utplsql'
 
-                        buildscript {
-                            repositories {
-                                mavenLocal()
-                            }
-                            dependencies {
-                                classpath "com.oracle:ojdbc6:11.2.0.1.0"
-                            }
+                        repositories {
+                            mavenLocal()
+                            mavenCentral()
+                        }
+                        dependencies {
+                            driver "com.oracle:ojdbc6:11.2.0.1.0"
+                            junitreport 'org.apache.ant:ant-junit:1.9.4'
                         }
 
                         utplsql {
@@ -48,13 +48,13 @@ class ExecuteTestIntegDbSpec extends IntegrationSpec {
         buildFile << '''
                         apply plugin: 'com.iadams.utplsql'
 
-                        buildscript {
-                            repositories {
-                                mavenLocal()
-                            }
-                            dependencies {
-                                classpath "com.oracle:ojdbc6:11.2.0.1.0"
-                            }
+                        repositories {
+                            mavenLocal()
+                            mavenCentral()
+                        }
+                        dependencies {
+                            driver "com.oracle:ojdbc6:11.2.0.1.0"
+                            junitreport 'org.apache.ant:ant-junit:1.9.4'
                         }
 
                         utplsql {
@@ -78,13 +78,13 @@ class ExecuteTestIntegDbSpec extends IntegrationSpec {
             buildFile << '''
                         apply plugin: 'com.iadams.utplsql'
 
-                        buildscript {
-                            repositories {
-                                mavenLocal()
-                            }
-                            dependencies {
-                                classpath "com.oracle:ojdbc6:11.2.0.1.0"
-                            }
+                        repositories {
+                            mavenLocal()
+                            mavenCentral()
+                        }
+                        dependencies {
+                            driver "com.oracle:ojdbc6:11.2.0.1.0"
+                            junitreport 'org.apache.ant:ant-junit:1.9.4'
                         }
 
                         utplsql {
@@ -107,13 +107,13 @@ class ExecuteTestIntegDbSpec extends IntegrationSpec {
         buildFile << '''
                         apply plugin: 'com.iadams.utplsql'
 
-                        buildscript {
-                            repositories {
-                                mavenLocal()
-                            }
-                            dependencies {
-                                classpath "com.oracle:ojdbc6:11.2.0.1.0"
-                            }
+                        repositories {
+                            mavenLocal()
+                            mavenCentral()
+                        }
+                        dependencies {
+                            driver "com.oracle:ojdbc6:11.2.0.1.0"
+                            junitreport 'org.apache.ant:ant-junit:1.9.4\'
                         }
 
                         utplsql {

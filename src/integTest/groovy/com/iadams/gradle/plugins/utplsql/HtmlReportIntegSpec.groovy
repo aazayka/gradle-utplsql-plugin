@@ -8,12 +8,21 @@ import nebula.test.functional.ExecutionResult
  */
 class HtmlReportIntegSpec extends IntegrationSpec {
 
+    def setup(){
+        buildFile << '''apply plugin: 'com.iadams.utplsql'
+
+                        repositories {
+                            mavenCentral()
+                        }
+
+                        dependencies {
+                            junitreport 'org.apache.ant:ant-junit:1.9.4'
+                        }'''.stripIndent()
+    }
+
     def "Generate a HTML successful report from single XML files"() {
         setup:
         useToolingApi = false
-        buildFile << '''
-                        apply plugin: 'com.iadams.utplsql'
-                        '''.stripIndent()
         copyResources('output/passed.xml', 'build/utplsql/TEST-UT_BETWNSTR.xml')
 
 
@@ -27,9 +36,7 @@ class HtmlReportIntegSpec extends IntegrationSpec {
     def "Generate a HTML report with failed tests from XML files"() {
         setup:
         useToolingApi = false
-        buildFile << '''
-                        apply plugin: 'com.iadams.utplsql'
-                        '''.stripIndent()
+
         copyResources('output/failure.xml', 'build/utplsql/TEST-UT_BETWNSTR.xml')
 
 
@@ -43,9 +50,6 @@ class HtmlReportIntegSpec extends IntegrationSpec {
     def "Generate a HTML report with errors from XML files"() {
         setup:
         useToolingApi = false
-        buildFile << '''
-                        apply plugin: 'com.iadams.utplsql'
-                        '''.stripIndent()
         copyResources('output/error.xml', 'build/utplsql/TEST-UT_CHEESE.xml')
 
 

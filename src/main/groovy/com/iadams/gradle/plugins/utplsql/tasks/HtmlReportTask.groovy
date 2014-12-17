@@ -34,7 +34,7 @@ class HtmlReportTask extends DefaultTask {
         ant.taskdef(
             name: 'junitreport',
             classname: 'org.apache.tools.ant.taskdefs.optional.junit.XMLResultAggregator',
-            classpath: project.buildscript.configurations.classpath
+            classpath: project.configurations.junitreport.asPath
         )
 
         ant.junitreport(todir: "$reportsDir") {

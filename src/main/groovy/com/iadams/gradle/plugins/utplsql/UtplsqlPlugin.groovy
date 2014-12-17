@@ -33,6 +33,7 @@ class UtplsqlPlugin implements Plugin<Project> {
         project.extensions.create( UTPLSQL_EXTENSION, UtplsqlPluginExtension, project)
 
         project.configurations{ driver }
+        project.configurations{ junitreport }
 
         addTasks(project)
     }

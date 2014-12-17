@@ -115,7 +115,7 @@ class RunTestsTask extends DefaultTask {
 
         try {
             //TODO extract the base configuration for the oracle driver into an abstract task.
-            project.buildscript.configurations.classpath.each {File file ->
+            project.configurations.driver.each {File file ->
                 project.gradle.class.classLoader.addURL(file.toURL())
             }
 
