@@ -139,6 +139,8 @@ class RunTestsTask extends DefaultTask {
                 }
             }
 
+            sql.close()
+
             if(totalTests == 0 && project.extensions.utplsql.failOnNoTests){
                 throw new GradleException("No tests were run.")
             }

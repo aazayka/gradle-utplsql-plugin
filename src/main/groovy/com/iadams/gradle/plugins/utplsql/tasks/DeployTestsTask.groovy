@@ -95,6 +95,8 @@ class DeployTestsTask extends DefaultTask {
                 logger.debug "[DEBUG] Recompiling $it"
                 dao.recompilePackage(it)
             }
+
+            sql.close()
         }
         catch (ClassNotFoundException e) {
             throw new GradleException("JDBC Driver class not found.", e);
