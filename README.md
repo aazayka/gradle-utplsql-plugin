@@ -20,15 +20,21 @@ To apply the plugin:
 buildscript {
   repositories {
     maven { url 'http://dl.bintray.com/iwarapter/gradle-plugins/' }
-    mavenLocal()
   }
   dependencies {
-    classpath 'com.oracle:ojdbc6:11.2.0.1.0' //<-- Add your jdbc driver
-    classpath 'com.iadams:gradle-utplsql-plugin:0.1'
+    classpath 'com.iadams:gradle-utplsql-plugin:0.1.1'
   }
 }
 
 apply plugin: 'com.iadams.utplsql'
+
+repositories {
+  mavenCentral()
+}
+dependencies {
+  junitreport 'org.apache.ant:ant-junit:1.9.4'
+  driver 'com.oracle:ojdbc6:11.2.0.1.0' //<-- Add your jdbc driver
+}
 ```
 
 Tasks
@@ -41,6 +47,18 @@ utplsql - Deploy, Run, Report
 utReport - Generates HTML reports from the XML results.
 utRun - Executes all utPLSQL tests.
 ```
+
+Rules
+-----------
+```
+Rules
+-----
+Pattern: clean<TaskName>: Cleans the output files of a task.
+Pattern: utRun-<TestName>: Executes a specific UTPLSQL test.
+Pattern: utTest-<TestName>: Executes the UTPLSQL tests for a specific object.
+Pattern: utDeploy-<TestName>: Deploys a specific UTPLSQL test.
+```
+
 ## Configuration
 
 ### build.gradle
