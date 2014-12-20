@@ -2,6 +2,7 @@ package com.iadams.gradle.plugins.utplsql
 
 import com.iadams.gradle.plugins.utplsql.extensions.UtplsqlPluginExtension
 import com.iadams.gradle.plugins.utplsql.tasks.HtmlReportTask
+import com.iadams.gradle.plugins.utplsql.tasks.rules.GenerateTestRule
 import com.iadams.gradle.plugins.utplsql.tasks.rules.TestObjectRule
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -88,13 +89,11 @@ class UtplsqlPlugin implements Plugin<Project> {
             group = 'utplsql'
         }
         project.getTasks().getByName(UTPLSQL_RUN_TESTS_TASK).mustRunAfter project.getTasks().getByName(UTPLSQL_DEPLOY_TESTS_TASK)
-        //project.getTasks().getByName(UTPLSQL_RUN_TESTS_TASK).finalizedBy project.getTasks().getByName(UTPLSQL_TEST_REPORTS_TASK)
-        project.tasks.withType(RunTestsTask){
-            finalizedBy = [UTPLSQL_TEST_REPORTS_TASK]
-        }
+        project.getTasks().getByName(UTPLSQL_RUN_TESTS_TASK).finalizedBy project.getTasks().getByName(UTPLSQL_TEST_REPORTS_TASK)
 
         project.getTasks().addRule(new ExecuteTestRule(project))
         project.getTasks().addRule(new TestObjectRule(project))
         project.getTasks().addRule(new DeployTestRule(project))
+        project.getTasks().addRule(new GenerateTestRule(project))
     }
 }

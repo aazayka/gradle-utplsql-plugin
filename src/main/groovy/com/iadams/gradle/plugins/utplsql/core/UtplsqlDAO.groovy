@@ -75,8 +75,9 @@ class UtplsqlDAO {
             sql.execute("ALTER PACKAGE ${Sql.expand(packageName.toString().toUpperCase())} COMPILE BODY")
 
             if(getPackageStatus(packageName)!='VALID'){
-                throw new UtplsqlDAOException("The package $packageName failed to compile.")
+                return false
             }
+            return true
         }
         catch(SQLException e){
             throw new UtplsqlDAOException("Error communicating with the database.", e)

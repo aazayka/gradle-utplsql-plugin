@@ -130,6 +130,7 @@ class RunTestsTask extends DefaultTask {
                 new File("${runner.outputDir}/TEST-${it}.xml").write(runner.runPackage( it, getTestMethod(), getSetupMethod()))
                 totalTests += runner.results.getTestsRun()
 
+                logger.info "[INFO] Package: $it"
                 logger.info "[INFO] Tests Run: ${runner.results.getTestsRun()}"
                 logger.info "[INFO] Failures: ${runner.results.getTestFailures()}"
                 logger.info "[INFO] Errors: ${runner.results.getTestErrors()}"

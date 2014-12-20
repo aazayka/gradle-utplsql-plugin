@@ -131,11 +131,11 @@ class DeployTestsIntegDbSpec extends IntegrationSpec {
                         '''.stripIndent()
 
         when:
-        ExecutionResult result = runTasksWithFailure(UtplsqlPlugin.UTPLSQL_DEPLOY_TESTS_TASK)
+        ExecutionResult result = runTasksSuccessfully(UtplsqlPlugin.UTPLSQL_DEPLOY_TESTS_TASK)
 
         then:
         result.standardOutput.contains('Deploying: ut_broken.pks')
         result.standardOutput.contains('Deploying: ut_broken.pkb')
-        result.getFailure().cause.cause.message == "The package ut_broken failed to compile."
+        result.standardOutput.contains('Package ut_broken failed to compile.')
     }
 }

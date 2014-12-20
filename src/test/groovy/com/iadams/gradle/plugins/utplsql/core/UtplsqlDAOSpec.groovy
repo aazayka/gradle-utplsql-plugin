@@ -2,9 +2,6 @@ package com.iadams.gradle.plugins.utplsql.core
 
 import groovy.sql.Sql
 import spock.lang.Specification
-import spock.lang.Unroll
-
-import java.sql.SQLException
 
 /**
  * Created by iwarapter on 12/12/14.
@@ -47,12 +44,9 @@ class UtplsqlDAOSpec extends Specification {
         given:
         sql.rows(_) >> [[STATUS:'VALID']]
         dao.getPackageStatus(_) >> 'VALID'
-        
-        when:
-        dao.recompilePackage('UT_BETWNSTR')
 
-        then:
-        notThrown UtplsqlDAOException
+        expect:
+        dao.recompilePackage('UT_BETWNSTR') == true
     }
 
     def "recompile a broken package throws exception"(){
@@ -60,10 +54,7 @@ class UtplsqlDAOSpec extends Specification {
         sql.rows(_) >> [[STATUS:'INVALID']]
         dao.getPackageStatus(_) >> 'INVALID'
 
-        when:
-        dao.recompilePackage('UT_BETWNSTR')
-
-        then:
-        thrown UtplsqlDAOException
+        expect:
+        dao.recompilePackage('UT_BETWNSTR') == false
     }
 }

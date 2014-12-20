@@ -3,6 +3,7 @@ package com.iadams.gradle.plugins.utplsql
 import nebula.test.IntegrationSpec
 import nebula.test.functional.ExecutionResult
 import org.gradle.api.logging.LogLevel
+import spock.lang.Unroll
 
 /**
  * Created by Iain Adams
@@ -10,6 +11,7 @@ import org.gradle.api.logging.LogLevel
 class UtplsqlIntegDbSpec extends IntegrationSpec {
 
     def setup() {
+        useToolingApi = false
         directory('src/test/plsql')
         buildFile << '''
                     apply plugin: 'com.iadams.utplsql'
@@ -33,7 +35,6 @@ class UtplsqlIntegDbSpec extends IntegrationSpec {
 
     def "run utplsql with passing tests"() {
         setup:
-        useToolingApi = false
         copyResources('src/test/plsql','src/test/plsql')
 
         when:
@@ -47,7 +48,6 @@ class UtplsqlIntegDbSpec extends IntegrationSpec {
 
     def "run utplsql with failing tests"() {
         setup:
-        useToolingApi = false
         copyResources('src/failing/plsql','src/test/plsql')
 
         when:
@@ -60,9 +60,23 @@ class UtplsqlIntegDbSpec extends IntegrationSpec {
         result.getFailure().cause.cause.message == "Failing unit tests.\nTests: 5 \nFailures: 1 \nErrors: 0"
     }
 
+    def "run utplsql with erroring tests"() {
+        setup:
+        copyResources('src/broken/plsql','src/test/plsql')
+        copyResources('src/test/plsql', 'src/test/plsql')
+
+        when:
+        ExecutionResult result = runTasksWithFailure('utplsql')
+
+        then:
+        fileExists("build/utplsql/TEST-ut_broken.xml")
+        fileExists("build/reports/utplsql/1_ut_broken-errors.html")
+
+        //result.getFailure().cause.cause.message == "Failing unit tests.\nTests: 1 \nFailures: 0 \nErrors: 1"
+    }
+
     def "run utplsql with elevated logging"() {
         setup:
-        useToolingApi = false
         logLevel = LogLevel.INFO
         copyResources('src/test/plsql','src/test/plsql')
 
@@ -77,5 +91,20 @@ class UtplsqlIntegDbSpec extends IntegrationSpec {
         result.standardOutput.contains('[INFO] Tests Run: 4')
         result.standardOutput.contains('[INFO] Failures: 0')
         result.standardOutput.contains('[INFO] Errors: 0')
-}
+    }
+
+    @Unroll
+    def "run utplsql against version #requestedGradleVersion of gradle"(){
+        setup:
+        copyResources('src/test/plsql','src/test/plsql')
+
+        when:
+        gradleVersion = requestedGradleVersion
+
+        then:
+        runTasksSuccessfully(UtplsqlPlugin.UTPLSQL_ALL_TASK)
+
+        where:
+        requestedGradleVersion << ['1.6','1.7','1.8','1.9','1.10','1.11','1.12','2.0','2.1','2.2']
+    }
 }

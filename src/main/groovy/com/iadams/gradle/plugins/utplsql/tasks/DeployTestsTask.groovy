@@ -93,7 +93,9 @@ class DeployTestsTask extends DefaultTask {
 
             packages.each{
                 logger.debug "[DEBUG] Recompiling $it"
-                dao.recompilePackage(it)
+                if(!dao.recompilePackage(it)){
+                    logger.warn "[WARN] Package $it failed to compile."
+                }
             }
 
             sql.close()
