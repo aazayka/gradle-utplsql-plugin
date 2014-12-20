@@ -22,7 +22,7 @@ buildscript {
     maven { url 'http://dl.bintray.com/iwarapter/gradle-plugins/' }
   }
   dependencies {
-    classpath 'com.iadams:gradle-utplsql-plugin:0.1.1'
+    classpath 'com.iadams:gradle-utplsql-plugin:0.1.2'
   }
 }
 
@@ -57,6 +57,7 @@ Pattern: clean<TaskName>: Cleans the output files of a task.
 Pattern: utRun-<TestName>: Executes a specific UTPLSQL test.
 Pattern: utTest-<TestName>: Executes the UTPLSQL tests for a specific object.
 Pattern: utDeploy-<TestName>: Deploys a specific UTPLSQL test.
+Pattern: utGen-<TestName>: Generates UTPLSQL test spec and body shell.
 ```
 
 ## Configuration
