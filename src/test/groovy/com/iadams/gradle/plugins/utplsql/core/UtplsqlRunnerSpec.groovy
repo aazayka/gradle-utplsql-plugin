@@ -78,6 +78,9 @@ class UtplsqlRunnerSpec extends Specification {
         dao.getPackageStatus(_) >> 'INVALID'
         reportGen.generateErrorReport() >> pkgResults
         pkgResults.toXML(_, _) >> '<pretend error xml>'
+        pkgResults.testsRun >> 4
+        pkgResults.testErrors >> 0
+        pkgResults.testFailures >> 0
 
         expect:
         runner.runPackage('ut_betwnstr', 'test', true) == '<pretend error xml>'

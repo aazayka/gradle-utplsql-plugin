@@ -72,7 +72,7 @@ class UtplsqlIntegDbSpec extends IntegrationSpec {
         fileExists("build/utplsql/TEST-ut_broken.xml")
         fileExists("build/reports/utplsql/1_ut_broken-errors.html")
 
-        //result.getFailure().cause.cause.message == "Failing unit tests.\nTests: 1 \nFailures: 0 \nErrors: 1"
+        result.getFailure().cause.cause.message == "Failing unit tests.\nTests: 9 \nFailures: 0 \nErrors: 1"
     }
 
     def "run utplsql with elevated logging"() {

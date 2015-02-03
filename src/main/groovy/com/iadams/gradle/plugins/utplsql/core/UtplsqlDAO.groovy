@@ -33,7 +33,7 @@ class UtplsqlDAO {
             return 'NO PACKAGE FOUND'
         }
 
-        if(result[0].STATUS == 'VALID') {
+        if(!result.contains([STATUS:'INVALID'])) {
             return 'VALID'
         }
         else {

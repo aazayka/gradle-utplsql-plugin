@@ -49,9 +49,15 @@ class UtplsqlRunner {
     {
         try {
             def packageStatus = dao.getPackageStatus(packageName)
+            logger.debug "[DEBUG] Package $packageName is $packageStatus"
             switch(packageStatus){
                 case 'INVALID':
                     results = reportGen.generateErrorReport()
+
+                    testsRun += results.testsRun
+                    testsFailed += results.testFailures
+                    testsErrors += results.testErrors
+
                     return results.toXML(packageName, 0)
 
                 case 'VALID':
