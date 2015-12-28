@@ -1,5 +1,5 @@
 <testsuite name="UT_CHEESE" tests="1" failures="0" skipped="0" errors="1" time="0.145">
-  <testcase name="" classname="" time="0">
-    <error type="INVALID">Warning: Object altered with compilation errors.</error>
-  </testcase>
+    <testcase name="" classname="" time="0">
+        <error type="INVALID">Warning: Object altered with compilation errors.</error>
+    </testcase>
 </testsuite>

@@ -1,20 +1,43 @@
+/*
+ * Gradle Utplsql Plugin
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2015 Iain Adams
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package com.iadams.gradle.plugins.utplsql
 
-import nebula.test.IntegrationSpec
-import nebula.test.functional.ExecutionResult
-import org.gradle.api.logging.LogLevel
-import spock.lang.Unroll
+import com.iadams.gradle.plugins.utplsql.utils.TestKitBaseIntegSpec
+import org.gradle.testkit.runner.GradleRunner
 
-/**
- * Created by Iain Adams
- */
-class UtplsqlIntegDbSpec extends IntegrationSpec {
+import static org.gradle.testkit.runner.TaskOutcome.FAILED
+import static org.gradle.testkit.runner.TaskOutcome.SUCCESS
 
-    def setup() {
-        useToolingApi = false
-        directory('src/test/plsql')
-        buildFile << '''
-                    apply plugin: 'com.iadams.utplsql'
+class UtplsqlIntegDBSpec extends TestKitBaseIntegSpec {
+
+  def setup() {
+    directory('src/test/plsql')
+    buildFile << '''
+                    plugins {
+                      id 'com.iadams.utplsql'
+                    }
 
                     repositories {
                         mavenLocal()
@@ -31,80 +54,89 @@ class UtplsqlIntegDbSpec extends IntegrationSpec {
                         password = "testing"
                     }
                     '''.stripIndent()
-    }
+  }
 
-    def "run utplsql with passing tests"() {
-        setup:
-        copyResources('src/test/plsql','src/test/plsql')
+  def "run utplsql with passing tests"() {
+    setup:
+    copyResources('src/test/plsql', 'src/test/plsql')
 
-        when:
-        runTasksSuccessfully('utplsql')
+    when:
+    def result = GradleRunner.create()
+      .withProjectDir(testProjectDir.root)
+      .withArguments(UtplsqlPlugin.UTPLSQL_ALL_TASK)
+      .withPluginClasspath(pluginClasspath)
+      .build()
 
-        then:
-        fileExists("build/utplsql/TEST-ut_betwnstr.xml")
-        fileExists("build/reports/utplsql/0_ut_betwnstr.html")
-        fileExists("build/reports/utplsql/1_ut_simple_example.html")
-    }
+    then:
+    result.task(':utDeploy').outcome == SUCCESS
+    result.task(':utRun').outcome == SUCCESS
+    result.task(':utReport').outcome == SUCCESS
+    result.task(':utplsql').outcome == SUCCESS
+    fileExists("build/utplsql/TEST-ut_betwnstr.xml")
+    fileExists("build/reports/utplsql/0_ut_betwnstr.html")
+  }
 
-    def "run utplsql with failing tests"() {
-        setup:
-        copyResources('src/failing/plsql','src/test/plsql')
+  def "run utplsql with failing tests"() {
+    setup:
+    copyResources('src/failing/plsql', 'src/test/plsql')
 
-        when:
-        ExecutionResult result = runTasksWithFailure('utplsql')
+    when:
+    def result = GradleRunner.create()
+      .withProjectDir(testProjectDir.root)
+      .withArguments(UtplsqlPlugin.UTPLSQL_ALL_TASK)
+      .withPluginClasspath(pluginClasspath)
+      .buildAndFail()
 
-        then:
-        fileExists("build/utplsql/TEST-ut_failing.xml")
-        fileExists("build/reports/utplsql/0_ut_failing.html")
+    then:
+    result.task(':utDeploy').outcome == SUCCESS
+    result.task(':utRun').outcome == FAILED
+    result.task(':utReport').outcome == SUCCESS
+    fileExists("build/utplsql/TEST-ut_failing.xml")
+    fileExists("build/reports/utplsql/0_ut_failing.html")
 
-        result.getFailure().cause.cause.message == "Failing unit tests.\nTests: 5 \nFailures: 1 \nErrors: 0"
-    }
+    result.output.contains('Failures: 1')
+  }
 
-    def "run utplsql with erroring tests"() {
-        setup:
-        copyResources('src/broken/plsql','src/test/plsql')
-        copyResources('src/test/plsql', 'src/test/plsql')
+  def "run utplsql with erroring tests"() {
+    setup:
+    copyResources('src/broken/plsql', 'src/test/plsql')
+    copyResources('src/test/plsql', 'src/test/plsql')
 
-        when:
-        ExecutionResult result = runTasksWithFailure('utplsql')
+    when:
+    def result = GradleRunner.create()
+      .withProjectDir(testProjectDir.root)
+      .withArguments(UtplsqlPlugin.UTPLSQL_ALL_TASK)
+      .withPluginClasspath(pluginClasspath)
+      .buildAndFail()
 
-        then:
-        fileExists("build/utplsql/TEST-ut_broken.xml")
-        fileExists("build/reports/utplsql/1_ut_broken-errors.html")
+    then:
+    result.task(':utDeploy').outcome == SUCCESS
+    result.task(':utRun').outcome == FAILED
+    result.task(':utReport').outcome == SUCCESS
+    fileExists("build/utplsql/TEST-ut_broken.xml")
+    fileExists("build/reports/utplsql/1_ut_broken-errors.html")
 
-        result.getFailure().cause.cause.message == "Failing unit tests.\nTests: 9 \nFailures: 0 \nErrors: 1"
-    }
+    result.output.contains('Errors: 1')
+  }
 
-    def "run utplsql with elevated logging"() {
-        setup:
-        logLevel = LogLevel.INFO
-        copyResources('src/test/plsql','src/test/plsql')
+  def "run utplsql with elevated logging"() {
+    setup:
+    copyResources('src/test/plsql', 'src/test/plsql')
 
-        when:
-        ExecutionResult result = runTasksSuccessfully('utplsql')
+    when:
+    def result = GradleRunner.create()
+      .withProjectDir(testProjectDir.root)
+      .withArguments(UtplsqlPlugin.UTPLSQL_ALL_TASK, '--i')
+      .withPluginClasspath(pluginClasspath)
+      .build()
 
-        then:
-        result.standardOutput.contains(':utDeploy')
-        result.standardOutput.contains(':utRun')
-        result.standardOutput.contains(':utReport')
-        result.standardOutput.contains(':utplsql')
-        result.standardOutput.contains('[INFO] Tests Run: 4')
-        result.standardOutput.contains('[INFO] Failures: 0')
-        result.standardOutput.contains('[INFO] Errors: 0')
-    }
-
-    @Unroll
-    def "run utplsql against version #requestedGradleVersion of gradle"(){
-        setup:
-        copyResources('src/test/plsql','src/test/plsql')
-
-        when:
-        gradleVersion = requestedGradleVersion
-
-        then:
-        runTasksSuccessfully(UtplsqlPlugin.UTPLSQL_ALL_TASK)
-
-        where:
-        requestedGradleVersion << ['1.6','1.7','1.8','1.9','1.10','1.11','1.12','2.0','2.1','2.2']
-    }
+    then:
+    result.task(':utDeploy').outcome == SUCCESS
+    result.task(':utRun').outcome == SUCCESS
+    result.task(':utReport').outcome == SUCCESS
+    result.task(':utplsql').outcome == SUCCESS
+    result.output.contains('[INFO] Tests Run: 4')
+    result.output.contains('[INFO] Failures: 0')
+    result.output.contains('[INFO] Errors: 0')
+  }
 }

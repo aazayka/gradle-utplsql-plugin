@@ -22,46 +22,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package com.iadams.gradle.plugins.utplsql
 
 import com.iadams.gradle.plugins.utplsql.utils.TestKitBaseIntegSpec
 import org.gradle.testkit.runner.GradleRunner
 
-class DeployTestsIntegDbSpec extends TestKitBaseIntegSpec {
+class SubProjectDeployTestsIntegDbSpec extends TestKitBaseIntegSpec {
 
-  def setup() {
-    directory('src/test/plsql')
-    copyResources('src/test/plsql', 'src/test/plsql')
-    buildFile << '''
-      plugins {
-        id 'com.iadams.utplsql'
-      }
-
-      repositories {
-        mavenLocal()
-      }
-      dependencies {
-        driver "com.oracle:ojdbc6:11.2.0.1.0"
-      }
-
-      utplsql {
-        url = "jdbc:oracle:thin:@localhost:1521:test"
-        username = "testing"
-        password = "testing"
-      }
-      '''.stripIndent()
-  }
-
-  def "use the rule to deploy a test"() {
+  def "use the rule to deploy a test in a subproject"() {
     setup:
-    directory('src/test/plsql')
-    copyResources('src/test/plsql', 'src/test/plsql')
+    addSubproject('schemaOne')
+    addSubproject('schemaTwo')
+    directory('schemaOne/src/test/plsql')
+    copyResources('src/test/plsql/ut_betwnstr.pks', 'schemaOne/src/test/plsql/ut_betwnstr.pks')
+    copyResources('src/test/plsql/ut_betwnstr.pkb', 'schemaOne/src/test/plsql/ut_betwnstr.pkb')
+    copyResources('buildFiles/schemaOne.gradle', 'schemaOne/build.gradle')
+    copyResources('buildFiles/schemaTwo.gradle', 'schemaTwo/build.gradle')
 
     when:
     def result = GradleRunner.create()
       .withProjectDir(testProjectDir.root)
-      .withArguments('utDeploy-betwnstr', '--i')
+      .withArguments('schemaOne:utDeploy-betwnstr', '--i')
       .withPluginClasspath(pluginClasspath)
       .build()
 
@@ -70,30 +51,16 @@ class DeployTestsIntegDbSpec extends TestKitBaseIntegSpec {
     result.output.contains('Deploying: ut_betwnstr.pkb')
   }
 
-  def "use task to deploy all tests"() {
-    when:
-    def result = GradleRunner.create()
-      .withProjectDir(testProjectDir.root)
-      .withArguments(UtplsqlPlugin.UTPLSQL_DEPLOY_TESTS_TASK, '--i')
-      .withPluginClasspath(pluginClasspath)
-      .build()
-
-    then:
-    result.output.contains('Deploying: ut_betwnstr.pks')
-    result.output.contains('Deploying: ut_betwnstr.pkb')
-    result.output.contains('Deploying: ut_simple_example.pks')
-    result.output.contains('Deploying: ut_simple_example.pkb')
-  }
-
-  def "use task to deploy all tests in non-standard folder"() {
+  def "deploy all tests across all schemas"() {
     setup:
-    directory('tests')
-    copyResources('src/test/plsql', 'tests')
-    buildFile.append('''
-      utplsql {
-        sourceDir = "${projectDir}/tests"
-      }
-      ''')
+    addSubproject('schemaOne')
+    addSubproject('schemaTwo')
+    copyResources('src/test/plsql/ut_betwnstr.pks', 'schemaOne/src/test/plsql/ut_betwnstr.pks')
+    copyResources('src/test/plsql/ut_betwnstr.pkb', 'schemaOne/src/test/plsql/ut_betwnstr.pkb')
+    copyResources('src/test/plsql/ut_simple_example.pks', 'schemaTwo/src/test/plsql/ut_simple_example.pks')
+    copyResources('src/test/plsql/ut_simple_example.pkb', 'schemaTwo/src/test/plsql/ut_simple_example.pkb')
+    copyResources('buildFiles/schemaOne.gradle', 'schemaOne/build.gradle')
+    copyResources('buildFiles/schemaTwo.gradle', 'schemaTwo/build.gradle')
 
     when:
     def result = GradleRunner.create()
@@ -109,16 +76,18 @@ class DeployTestsIntegDbSpec extends TestKitBaseIntegSpec {
     result.output.contains('Deploying: ut_simple_example.pkb')
   }
 
-  def "deploy a package that doesnt compile results in failure"() {
+  def "deploy all tests across all schemas with custom sourceDir"() {
     setup:
-    directory('tests')
-    copyResources('src/broken/plsql', 'tests')
-
-    buildFile << '''
-      utplsql {
-        sourceDir = "${projectDir}/tests"
-      }
-      '''.stripIndent()
+    addSubproject('schemaOne')
+    addSubproject('schemaTwo')
+    directory('schemaOne/tests')
+    directory('schemaTwo/tests')
+    copyResources('src/test/plsql/ut_betwnstr.pks', 'schemaOne/tests/ut_betwnstr.pks')
+    copyResources('src/test/plsql/ut_betwnstr.pkb', 'schemaOne/tests/ut_betwnstr.pkb')
+    copyResources('src/test/plsql/ut_simple_example.pks', 'schemaTwo/tests/ut_simple_example.pks')
+    copyResources('src/test/plsql/ut_simple_example.pkb', 'schemaTwo/tests/ut_simple_example.pkb')
+    copyResources('buildFiles/non-default/schemaOne.gradle', 'schemaOne/build.gradle')
+    copyResources('buildFiles/non-default/schemaTwo.gradle', 'schemaTwo/build.gradle')
 
     when:
     def result = GradleRunner.create()
@@ -128,8 +97,9 @@ class DeployTestsIntegDbSpec extends TestKitBaseIntegSpec {
       .build()
 
     then:
-    result.output.contains('Deploying: ut_broken.pks')
-    result.output.contains('Deploying: ut_broken.pkb')
-    result.output.contains('Package ut_broken failed to compile.')
+    result.output.contains('Deploying: ut_betwnstr.pks')
+    result.output.contains('Deploying: ut_betwnstr.pkb')
+    result.output.contains('Deploying: ut_simple_example.pks')
+    result.output.contains('Deploying: ut_simple_example.pkb')
   }
 }

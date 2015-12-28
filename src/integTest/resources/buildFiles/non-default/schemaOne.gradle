@@ -1,15 +1,17 @@
-apply plugin: 'com.iadams.utplsql'
+plugins {
+  id 'com.iadams.utplsql'
+}
 
 repositories {
-    mavenLocal()
+  mavenLocal()
 }
 dependencies {
-    driver "com.oracle:ojdbc6:11.2.0.1.0"
+  driver "com.oracle:ojdbc6:11.2.0.1.0"
 }
 
 utplsql {
-    url = "jdbc:oracle:thin:@localhost:1521:test"
-    username = "schemaOne"
-    password = "schemaOne"
-    sourceDir = "${projectDir}/tests"
+  url = "jdbc:oracle:thin:@localhost:1521:test"
+  username = "schemaOne"
+  password = "schemaOne"
+  sourceDir = "${projectDir}/tests"
 }

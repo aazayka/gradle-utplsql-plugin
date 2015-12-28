@@ -26,37 +26,56 @@ package com.iadams.gradle.plugins.utplsql
 
 import com.iadams.gradle.plugins.utplsql.utils.TestKitBaseIntegSpec
 import org.gradle.testkit.runner.GradleRunner
+import spock.lang.Unroll
 
 import static org.gradle.testkit.runner.TaskOutcome.SUCCESS
 
-class GenerateTestIntegSpec extends TestKitBaseIntegSpec {
+class GradleCompatabilityIntegDBSpec extends TestKitBaseIntegSpec {
 
-  def setup() {
+  @Unroll
+  def "compatible with gradle #gradleVersion"() {
+    setup:
+    directory('src/test/plsql')
     buildFile << '''
-      plugins {
-        id 'com.iadams.utplsql'
-      }
+                    plugins {
+                      id 'com.iadams.utplsql'
+                    }
 
-      repositories {
-        mavenCentral()
-      }
+                    repositories {
+                        mavenLocal()
+                        mavenCentral()
+                    }
+                    dependencies {
+                        driver "com.oracle:ojdbc6:11.2.0.1.0"
+                        junitreport 'org.apache.ant:ant-junit:1.9.4'
+                    }
 
-      dependencies {
-        junitreport 'org.apache.ant:ant-junit:1.9.4'
-      }'''.stripIndent()
-  }
+                    utplsql {
+                        url = "jdbc:oracle:thin:@localhost:1521:test"
+                        username = "testing"
+                        password = "testing"
+                    }
+                    '''.stripIndent()
 
-  def "Generate test file from the rule"() {
+    copyResources('src/test/plsql', 'src/test/plsql')
+
     when:
     def result = GradleRunner.create()
       .withProjectDir(testProjectDir.root)
-      .withArguments('utGen-package')
+      .withGradleVersion(gradleVersion)
+      .withArguments(UtplsqlPlugin.UTPLSQL_ALL_TASK)
       .withPluginClasspath(pluginClasspath)
       .build()
 
     then:
-    result.task(':utGen-package').outcome == SUCCESS
-    fileExists("src/test/plsql/ut_package.pks")
-    fileExists("src/test/plsql/ut_package.pkb")
+    result.task(':utDeploy').outcome == SUCCESS
+    result.task(':utRun').outcome == SUCCESS
+    result.task(':utReport').outcome == SUCCESS
+    result.task(':utplsql').outcome == SUCCESS
+    fileExists("build/utplsql/TEST-ut_betwnstr.xml")
+    fileExists("build/reports/utplsql/0_ut_betwnstr.html")
+
+    where:
+    gradleVersion << ['2.8', '2.9', '2.10']
   }
 }

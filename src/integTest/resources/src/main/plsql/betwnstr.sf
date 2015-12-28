@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION betwnstr (
+CREATE OR REPLACE FUNCTION TESTING.betwnstr (
    string_in   IN   VARCHAR2,
    start_in    IN   INTEGER,
    end_in      IN   INTEGER

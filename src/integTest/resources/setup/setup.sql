@@ -2,55 +2,55 @@
 
 --Run as system
 
-create user utp identified by utp default tablespace
-  users temporary tablespace temp;
+CREATE USER utp IDENTIFIED BY utp DEFAULT TABLESPACE
+  users TEMPORARY TABLESPACE temp;
 
-grant create session, create table, create procedure,
-create sequence, create view, create public synonym,
-drop public synonym to utp;
+GRANT CREATE SESSION, CREATE TABLE, CREATE PROCEDURE,
+CREATE SEQUENCE, CREATE VIEW, CREATE PUBLIC SYNONYM,
+DROP PUBLIC SYNONYM TO utp;
 
-alter user utp quota unlimited on users;
+ALTER USER utp QUOTA UNLIMITED ON users;
 
-create user testing identified by testing default tablespace
-  users temporary tablespace temp;
+CREATE USER testing IDENTIFIED BY testing DEFAULT TABLESPACE
+  users TEMPORARY TABLESPACE temp;
 
-grant create session, create table, create procedure,
-create sequence, create view, create public synonym,
-drop public synonym to testing;
+GRANT CREATE SESSION, CREATE TABLE, CREATE PROCEDURE,
+CREATE SEQUENCE, CREATE VIEW, CREATE PUBLIC SYNONYM,
+DROP PUBLIC SYNONYM TO testing;
 
-alter user testing quota unlimited on users;
+ALTER USER testing QUOTA UNLIMITED ON users;
 
-create user schemaOne identified by schemaOne default tablespace
-  users temporary tablespace temp;
+CREATE USER schemaOne IDENTIFIED BY schemaOne DEFAULT TABLESPACE
+  users TEMPORARY TABLESPACE temp;
 
-grant create session, create table, create procedure,
-create sequence, create view, create public synonym,
-drop public synonym to schemaOne;
+GRANT CREATE SESSION, CREATE TABLE, CREATE PROCEDURE,
+CREATE SEQUENCE, CREATE VIEW, CREATE PUBLIC SYNONYM,
+DROP PUBLIC SYNONYM TO schemaOne;
 
-alter user schemaOne quota unlimited on users;
+ALTER USER schemaOne QUOTA UNLIMITED ON users;
 
-create user schemaTwo identified by schemaTwo default tablespace
-  users temporary tablespace temp;
+CREATE USER schemaTwo IDENTIFIED BY schemaTwo DEFAULT TABLESPACE
+  users TEMPORARY TABLESPACE temp;
 
-grant create session, create table, create procedure,
-create sequence, create view, create public synonym,
-drop public synonym to schemaTwo;
+GRANT CREATE SESSION, CREATE TABLE, CREATE PROCEDURE,
+CREATE SEQUENCE, CREATE VIEW, CREATE PUBLIC SYNONYM,
+DROP PUBLIC SYNONYM TO schemaTwo;
 
-alter user schemaTwo quota unlimited on users;
+ALTER USER schemaTwo QUOTA UNLIMITED ON users;
 
-conn testing/testing@test
+CONN testing/testing@test
 
 @../src/main/plsql/betwnstr.sf
 @../src/main/plsql/simple_example.pks
 @../src/main/plsql/simple_example.pkb
 
 
-conn schemaOne/schemaOne@test
+CONN schemaOne/schemaOne@test
 
 @../src/main/plsql/betwnstr.sf
 
 
-conn schemaTwo/schemaTwo@test
+CONN schemaTwo/schemaTwo@test
 
 @../src/main/plsql/simple_example.pks
 @../src/main/plsql/simple_example.pkb
