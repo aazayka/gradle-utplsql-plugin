@@ -1,5 +1,6 @@
 plugins {
   id "com.iadams.gradle-plugin-plugin" version "0.2"
+  id "com.github.kt3k.coveralls" version "2.4.0x"
 }
 
 group = 'com.iadams.gradle.plugins'
