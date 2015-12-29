@@ -90,6 +90,21 @@ class UtplsqlPluginSpec extends Specification {
     task.failOnNoTests == true
   }
 
+  def "reports directory has default"() {
+    expect:
+    Task task = project.tasks.findByName(UtplsqlPlugin.UTPLSQL_TEST_REPORTS_TASK)
+    task.reportsDir == project.file('build/reports/utplsql')
+  }
+
+  def "reports directory is configurable"() {
+    when:
+    project.utplsql { reportsDir = 'cheese' }
+
+    then:
+    Task task = project.tasks.findByName(UtplsqlPlugin.UTPLSQL_TEST_REPORTS_TASK)
+    task.reportsDir == project.file('cheese')
+  }
+
   def 'apply does not throw exceptions'() {
     when:
     project.apply plugin: PLUGIN_ID

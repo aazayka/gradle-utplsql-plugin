@@ -91,6 +91,11 @@ class UtplsqlPlugin implements Plugin<Project> {
       conventionMapping.sourceDir = {extension.sourceDir}
     }
 
+    project.tasks.withType(HtmlReportTask) {
+      conventionMapping.resultsDir = {project.file(extension.outputDir)}
+      conventionMapping.reportsDir = {project.file(extension.reportsDir)}
+    }
+
     project.task(UTPLSQL_DEPLOY_TESTS_TASK, type: DeployTestsTask) {
       description = 'Deploys all the UTPLSQL tests in the test folder with JDBC driver.'
       group = 'utplsql'
@@ -104,8 +109,6 @@ class UtplsqlPlugin implements Plugin<Project> {
     project.task(UTPLSQL_TEST_REPORTS_TASK, type: HtmlReportTask) {
       description = 'Generates HTML reports from the XML results.'
       group = 'utplsql'
-      resultsDir = project.file(extension.outputDir)
-      reportsDir = project.file("${project.buildDir}/reports/utplsql")
     }
 
     project.task(UTPLSQL_ALL_TASK, dependsOn: [UTPLSQL_DEPLOY_TESTS_TASK, UTPLSQL_RUN_TESTS_TASK]) {

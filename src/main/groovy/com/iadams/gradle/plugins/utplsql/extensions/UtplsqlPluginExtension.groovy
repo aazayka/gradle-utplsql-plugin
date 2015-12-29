@@ -71,6 +71,11 @@ class UtplsqlPluginExtension {
   String outputDir
 
   /**
+   * The output directory for the html reports.
+   */
+  String reportsDir
+
+  /**
    * The type of test method to execute. Can be either test or run. Defaults to test.
    */
   String testMethod = 'run'
@@ -88,5 +93,6 @@ class UtplsqlPluginExtension {
   UtplsqlPluginExtension(Project project) {
     sourceDir = "${project.projectDir}/src/test/plsql"
     outputDir = "${project.buildDir}/utplsql"
+    reportsDir = "${project.buildDir}/reports/utplsql"
   }
 }
