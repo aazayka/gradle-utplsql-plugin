@@ -8,8 +8,8 @@ version = '0.2.0-SNAPSHOT'
 
 description = "Gradle plugin for utplsql test framework"
 
-sourceCompatibility = 1.6
-targetCompatibility = 1.6
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
 
 dependencies {
   testCompile 'xmlunit:xmlunit:1.3'
